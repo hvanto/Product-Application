@@ -9,23 +9,14 @@ module.exports = (sequelize, DataTypes) =>
       type: DataTypes.STRING(32),
       allowNull: false
       },
+    email: {
+        type: DataTypes.STRING(64),
+        allowNull: false
+    },
     password_hash: {
       type: DataTypes.STRING(255),
       allowNull: false
-    },
-    first_name: {
-      type: DataTypes.STRING(40),
-      allowNull: false
-    },
-    last_name: {
-      type: DataTypes.STRING(40),
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING(64),
-      allowNull: false
     }
-    
   }, {
     timestamps: true,
   });

@@ -125,6 +125,21 @@ const products = [
   },
 ];
 
+const users = [
+  {
+    username: 'isaac',
+    email: 'isaac@gmail.com',
+    password: 'abc123!'
+  },
+  {
+    username: 'henry',
+    email: 'henry@gmail.com',
+    password: 'def456!'
+  }
+];
+
+
+
 
 async function seedData() {
   const count = await db.user.count();
@@ -135,15 +150,18 @@ async function seedData() {
 
   const argon2 = require("argon2");
 
-  let hash = await argon2.hash("abc123", { type: argon2.argon2id });
-  await db.user.create({ username: "ikelsall", password_hash: hash, first_name: "Isaac", last_name : "Kelsall", email: "ik@gmail.com"});
+  // Add users
+  for (const user of users) {
+    let hash = await argon2.hash(user.password, { type: argon2.argon2id });
+    await db.user.create({ username: user.username, email: user.email, password_hash: hash});
+  }
 
-  hash = await argon2.hash("def456", { type: argon2.argon2id });
-  await db.user.create({ username: "henry", password_hash: hash, first_name: "Henry", last_name : "Kalra", email: "h@gmail.com" });
 
   // Create carts for each user
   await db.cart.create({ userId: 1 });
   await db.cart.create({ userId: 2 });
+
+  
 
 
   //Add products
