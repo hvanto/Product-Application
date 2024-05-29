@@ -7,7 +7,6 @@ export const CartContext = createContext();
 // CartContext Provider component
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
-  const [defaultCartId, setDefaultCartId] = useState(null);
 
   useEffect(() => {
     fetchCart();
@@ -15,9 +14,9 @@ export const CartProvider = ({ children }) => {
 
   const fetchCart = async () => {
     try {
-      //const userId = 1; //UPDATE THIS TO FETCH USER ID
-      //const cartId = userId || defaultCartId;
-      const response = await axios.get(`http://localhost:4000/api/cart/1`);
+      const userId = 1; //UPDATE THIS TO FETCH USER ID
+      const cartId = userId
+      const response = await axios.get(`http://localhost:4000/api/cart/${cartId}`);
       setCart(response.data);
     } catch (error) {
       console.error('Error fetching cart:', error);
