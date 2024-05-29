@@ -7,7 +7,7 @@ import { verifyUser } from '../data/repository';
 
 const Login = () => {
     const navigate = useNavigate();
-    const [fields, setFields] = useState({ username: "", password: "" });
+    const [fields, setFields] = useState({ email: "", password: "" });
     const [errorMessage, setErrorMessage] = useState(null);
     const [errors, setErrors] = useState({});
     const { loginUser } = useContext(UsernameContext);
@@ -32,11 +32,13 @@ const Login = () => {
     
         // Set user state.
         loginUser(user.username);
+
+        console.log('Login successful:', user);
     
-        // Navigate to the home page.
-        setTimeout(() => {
-            navigate('/profile');
-        }, 3000);
+        // Navigate to the profile page.
+        // setTimeout(() => {
+        //     navigate('/profile');
+        // }, 3000);
       };
 
     // const handleSubmit = async (event) => {

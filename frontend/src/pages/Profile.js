@@ -27,24 +27,21 @@ function Profile() {
     return validationErrors;
   };
 
-  const saveChanges = () => {
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+  // const saveChanges = () => {
+  //   const validationErrors = validateForm();
+  //   if (Object.keys(validationErrors).length > 0) {
+  //     setErrors(validationErrors);
+  //     return;
+  //   }
 
-    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const updatedUsers = storedUsers.map((u) => (u.id === currentUser.id ? formValues : u));
+  //   const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+  //   const updatedUsers = storedUsers.map((u) => (u.id === currentUser.id ? formValues : u));
 
-    localStorage.setItem('currentUser', JSON.stringify(formValues));
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
-
-    setEditSuccess(true);
-    setErrors({});
-    setEditMode(false);
-    setCurrentUser(formValues);
-  };
+  //   setEditSuccess(true);
+  //   setErrors({});
+  //   setEditMode(false);
+  //   setCurrentUser(formValues);
+  // };
 
   // const handleDeleteAccount = () => {
   //   deleteAccount(currentUser, logoutUser);
@@ -55,20 +52,20 @@ function Profile() {
   //   }, 3500); 
   // };
 
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (!isLoggedIn) {
-      navigate('/login');
-    }
+  // useEffect(() => {
+  //   const isLoggedIn = localStorage.getItem('isLoggedIn');
+  //   if (!isLoggedIn) {
+  //     navigate('/login');
+  //   }
 
-    if (editSuccess) {
-      const timeoutId = setTimeout(() => {
-        setEditSuccess(false);
-      }, 3000); 
+  //   if (editSuccess) {
+  //     const timeoutId = setTimeout(() => {
+  //       setEditSuccess(false);
+  //     }, 3000); 
 
-      return () => clearTimeout(timeoutId); 
-    }
-  }, [navigate, editSuccess]); 
+  //     return () => clearTimeout(timeoutId); 
+  //   }
+  // }, [navigate, editSuccess]); 
 
   return (
     <div className="container-fluid">
@@ -91,7 +88,6 @@ function Profile() {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    saveChanges();
                   }}
                 >
                   <div className="mb-3">
@@ -132,7 +128,7 @@ function Profile() {
                   </div>
                   {editMode ? (
                     <div className="text-center">
-                      <button type="button" class="btn btn-success mx-1" onClick={saveChanges}>
+                      <button type="button" class="btn btn-success mx-1">
                         Save Changes
                       </button>
                       <button type="button" className="btn btn-secondary mx-1" onClick={() => {

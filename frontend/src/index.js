@@ -1,14 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { initSpecials, initUsers } from "./data/repository";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-// initUsers();
-// initSpecials();
 root.render(
   <React.StrictMode>
     <App />
