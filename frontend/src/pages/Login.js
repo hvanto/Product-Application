@@ -21,7 +21,7 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
     
-        const user = await verifyUser(fields.username, fields.password);
+        const user = await verifyUser(fields.email, fields.password);
     
         if(user === null) {
           // Login failed, reset password field to blank and set error message.

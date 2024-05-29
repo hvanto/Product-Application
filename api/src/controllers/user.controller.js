@@ -18,21 +18,25 @@ exports.one = async (req, res) => {
 // Select one user from the database if email and password are a match.
 exports.login = async (req, res) => {
   const user = await db.user.findOne({
-    where: { email: req.query.email }
+    where: {
+      email: req.query.email
+    }
   });
 
   if (user === null) {
-    res.status(401).send("Invalid email or password");
+    res.status(404).send("User not found.");
     return;
   }
 
   const valid = await argon2.verify(user.password_hash, req.query.password);
 
-  if (valid) {
-    res.json(user);
-  } else {
-    res.status(401).send("Invalid email or password");
+  if (!valid) {
+    res.status(401).send("Invalid password.");
+    return;
   }
+
+  res.json(user);
+
 };
 
 // Create a user in the database.
