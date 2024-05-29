@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import validate from '../components/signupFormValidation'; // Import validate function
 import axios from 'axios';
-import { UsernameContext } from '../context/UsernameContext';
+import { UserContext } from '../context/UserContext';
 import { verifyUser } from '../data/repository';
 
 const Login = () => {
@@ -10,7 +10,7 @@ const Login = () => {
     const [fields, setFields] = useState({ email: "", password: "" });
     const [errorMessage, setErrorMessage] = useState(null);
     const [errors, setErrors] = useState({});
-    const { loginUser } = useContext(UsernameContext);
+    const { loginUser } = useContext(UserContext);
     const [loginSuccess, setLoginSuccess] = useState(false);
 
 
@@ -22,6 +22,7 @@ const Login = () => {
         event.preventDefault();
     
         const user = await verifyUser(fields.email, fields.password);
+        console.log(user);
     
         if(user === null) {
           // Login failed, reset password field to blank and set error message.
@@ -31,15 +32,14 @@ const Login = () => {
         }
     
         // Set user state.
-        loginUser(user.username);
-
-        console.log('Login successful:', user);
+        await loginUser(user);
+        console.log('loginUser called');
     
         // Navigate to the profile page.
         // setTimeout(() => {
         //     navigate('/profile');
         // }, 3000);
-      };
+    };
 
     // const handleSubmit = async (event) => {
     //     event.preventDefault();

@@ -1,7 +1,7 @@
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './custom.css';
-import { React, useState } from 'react';
+import { React, useState, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
@@ -15,24 +15,26 @@ import Backyardfarm from './pages/Backyardfarm';
 import Seminars from './pages/Seminars';
 import IndividualProduct from './pages/IndividualProductPage';
 import { CartProvider } from './context/CartContext';
-import { UsernameContext } from './context/UsernameContext';
+import { UserContext } from './context/UserContext';
 
 function App() {
 
-  const [email ,setEmail] = useState(null);
+  // const [email ,setEmail] = useState(null);
 
-  const loginUser = (email) => {
-    setEmail(email);
-  }
+  // const loginUser = (email) => {
+  //   setEmail(email);
+  // }
 
-  const logoutUser = () => {
-    setEmail('');
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('currentUser');
-  }
+  // //Change this to use localhost:4000/api/users/logout
+  // const logoutUser = () => {
+  //   setEmail('');
+  //   localStorage.removeItem('isLoggedIn');
+  //   localStorage.removeItem('currentUser');
+
+  const { loginUser, logoutUser } = useContext(UserContext);
 
   return (
-    <UsernameContext.Provider value={{ email, loginUser, logoutUser }}>
+    <UserContext.Provider value={{ loginUser, logoutUser }}>
     <CartProvider>
       <Router>
             <Navbar />
@@ -50,7 +52,7 @@ function App() {
         <Footer />
       </Router>
     </CartProvider>
-    </UsernameContext.Provider>
+    </UserContext.Provider>
   );
 }
 export default App;

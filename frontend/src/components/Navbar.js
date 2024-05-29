@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useLocation } from "react-router-dom"; // Import useLocation
 import { Offcanvas } from 'react-bootstrap'; // Import Offcanvas
 import CartDrawer from './ShoppingCart'; // Import CartDrawer component
+import { UserContext } from '../context/UserContext'; // Import UserContext
 
 function Navbar() {
     const [showCart, setShowCart] = useState(false); // State to control Offcanvas visibility
     const location = useLocation(); // Get the current location
 
-    const isLoggedIn = localStorage.getItem('isLoggedIn'); // Check if user is logged in
+    const { loggedIn } = useContext(UserContext);
 
     const handleCloseCart = () => setShowCart(false); // Function to hide Offcanvas
     const handleShowCart = () => setShowCart(true); // Function to show Offcanvas
@@ -52,19 +53,18 @@ function Navbar() {
                 <div className="col-4">
                     <div className="navbar-nav ms-auto justify-content-end align-items-center">
                         {/* User Profile Link */}
-                        {isLoggedIn ? (
-                            <Link className="nav-link" to="/profile">
-                                <div className="d-flex align-items-center"> 
-                                    <img src="/profile.png" alt="Profile" style={{ width: '30px', height: '30px', marginRight: '5px' }} />
-                                    Your Profile
-                                </div>
-                            </Link>
+                        {loggedIn ? ( // Check if user is logged in
+                        <Link className="nav-link" to="/profile">
+                            <div className="d-flex align-items-center"> 
+                                <img src="/profile.png" alt="Profile" style={{ width: '30px', height: '30px', marginRight: '5px' }} />
+                                Your Profile
+                            </div>
+                        </Link>
                         ) : (
                             <Link className="nav-link" to="/login">
                                 <img src="/profile.png" alt="Profile" style={{ width: '30px', height: '30px' }} />
                             </Link>
                         )}
-
                         {/* Shopping Cart Link */}
                         <Link onClick={handleShowCart}>
                             <div className="d-flex align-items-center"> {/* Wrap shopping cart with text in a div */}
