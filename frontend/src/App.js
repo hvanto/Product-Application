@@ -31,7 +31,7 @@ function App() {
   //   localStorage.removeItem('isLoggedIn');
   //   localStorage.removeItem('currentUser');
 
-  const { loginUser, logoutUser } = useContext(UserContext);
+  //const { loginUser, logoutUser } = useContext(UserContext);
 
   return (
     //<UserContext.Provider value={{ loginUser, logoutUser }}>

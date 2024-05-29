@@ -19,7 +19,7 @@ exports.one = async (req, res) => {
 exports.login = async (req, res) => {
   const user = await db.user.findOne({
     where: {
-      email: req.query.email
+      email: req.body.email
     }
   });
 
@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
     return;
   }
 
-  const valid = await argon2.verify(user.password_hash, req.query.password);
+  const valid = await argon2.verify(user.password_hash, req.body.password);
 
   if (!valid) {
     res.status(401).send("Invalid password.");

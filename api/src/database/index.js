@@ -150,15 +150,12 @@ async function seedData() {
 
   const argon2 = require("argon2");
 
-  // Add users
+  // Add users & carts
   for (const user of users) {
     let hash = await argon2.hash(user.password, { type: argon2.argon2id });
-    await db.user.create({ username: user.username, email: user.email, password_hash: hash});
+    const newUser = await db.user.create({ username: user.username, email: user.email, password_hash: hash});
+    await db.cart.create({ userId: newUser.userId });
   }
-
-  // Create carts for each user
-  await db.cart.create({ userId: 1 });
-  await db.cart.create({ userId: 2 });
 
   //Add products
   for (const product of products) {
