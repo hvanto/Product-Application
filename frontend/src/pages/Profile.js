@@ -114,11 +114,10 @@ function Profile() {
                     <label className="form-label">Email:</label>
                     <input
                       type="email"
-                      class={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                      className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                       name="email"
                       value={formValues.email}
                       onChange={handleChange}
-                      disabled={!editMode}
                     />
                     {errors.email && <div class="invalid-feedback">{errors.email}</div>}
                   </div>
@@ -126,7 +125,7 @@ function Profile() {
                     <label class="form-label">Password:</label>
                     <input
                       type="password"
-                      class={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                      className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                       name="password"
                       value={formValues.password}
                       onChange={handleChange}

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import StarRatingComponent from 'react-star-rating-component';
+import { UserContext } from '../context/UserContext';
 
 
 const IndividualProduct = () => {
@@ -14,6 +15,8 @@ const IndividualProduct = () => {
   const [remainingChars, setRemainingChars] = useState(100);
   const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [areReviewsVisible, setAreReviewsVisible] = useState(false);
+  const { user, loginUser } = useContext(UserContext);
 
     const handleCancelReview = () => {
       setIsReviewFormVisible(false);
@@ -25,6 +28,14 @@ const IndividualProduct = () => {
   const handleReviewContentChange = (e) => {
     setReviewContent(e.target.value);
     setRemainingChars(100 - e.target.value.length);
+  };
+
+  const toggleReviewsVisibility = () => {
+    setAreReviewsVisible(!areReviewsVisible);
+  };
+
+  const toggleReviewFormVisibility = () => {
+    setIsReviewFormVisible(!isReviewFormVisible);
   };
 
   useEffect(() => {
@@ -52,18 +63,36 @@ const IndividualProduct = () => {
   // Function to handle form submission
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
-    // Here you can implement logic to submit the review to the backend
-    console.log('Review Submitted:', {
-      productId,
-      reviewerName,
-      rating,
-      reviewContent
-    });
-    // Clear form fields after submission
-    setReviewerName('');
-    setRating(0);
-    setReviewContent('');
-  };
+
+    if (!user) {
+      // If the user is not logged in, show a message or redirect to the login page
+      console.log('You must be logged in to leave a review');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:4000/api/review', {
+        productId,
+        content: reviewContent,
+        rating,
+        reviewerName: user.username 
+      });
+
+    if (response.status === 200) {
+      // If the review was successfully saved, add it to the reviews state
+      setReviews(prevReviews => [...prevReviews, response.data]);
+      // Clear the review form
+      setRating(0);
+      setReviewContent('');
+      setRemainingChars(100);
+      setIsReviewFormVisible(false);
+    } else {
+      console.error('Error saving review:', response);
+    }
+  } catch (error) {
+    console.error('Error saving review:', error);
+  }
+};
 
   const navigate = useNavigate();  
   // Function to handle login
@@ -101,13 +130,21 @@ const IndividualProduct = () => {
                   <button className="btn custom-button mt-3">
                     Add to Cart
                   </button>
+                  {!isReviewFormVisible && (
+                      <div>
+                        <a href="#" onClick={toggleReviewFormVisibility}>
+                          Leave a review
+                        </a>
+                      </div>
+                    )}
+                  <div>
+                    <a href="#" onClick={toggleReviewsVisibility}>
+                      {areReviewsVisible ? 'Hide reviews' : 'See reviews'}
+                    </a>
+                  </div>
                   {isLoggedIn ? (
-                    <>
-                    <button className="btn custom-button mt-3" onClick={() => setIsReviewFormVisible(true)}>
-                    Write a Review
-                  </button>
-                  {isReviewFormVisible && (
-                    <form onSubmit={handleReviewSubmit} className="mt-4">
+                  isReviewFormVisible && (
+                    <form onSubmit={handleReviewSubmit} className="mt-2">
                       <h3 className="mb-2">Write a Review</h3>
                       <div className="form-group" style={{ display: 'flex', alignItems: 'center' }}>
                         <label htmlFor="rating" style={{ marginRight: '5px' }}>Rating:</label>
@@ -137,35 +174,35 @@ const IndividualProduct = () => {
                           )}
                         </div>
                       </div>
-                      <button type="submit" className="btn custom-button mt-2">
+                      <button type="submit" className="btn custom-button mt-2" style={{ marginRight: '10px' }}>
                         Submit Review
                       </button>
                       <button type="button" className="btn custom-button mt-2" onClick={handleCancelReview}>
                         Cancel Review
                       </button>
                     </form>
-                  )}
-                  </>
-                  ) : (
-                    <div className="mt-4">
+                  )
+                ) : (
+                  isReviewFormVisible && (
+                    <div className="mt-2">
                       <p>You must be logged in to leave a review.</p>
                       <button className="btn btn-primary" onClick={handleLogin}>
                         Log In
                       </button>
                     </div>
-                  )}
-                  <h3>Reviews</h3>
-                    {reviews.length === 0 ? (
-                      <p>No reviews yet. Be the first to write a review!</p>
-                    ) : (
-                      reviews.map((review, index) => (
-                        <div key={index} className="mb-3">
-                          <div>Rating: {review.rating} / 5</div>
-                          <div>{review.content}</div>
-                          <div>Reviewed by: {review.user.username}</div>
-                        </div>
-                      ))
-                    )}
+                  )
+                )}
+                {areReviewsVisible && reviews.length === 0 ? (
+                  <p>No reviews yet. Be the first to write a review!</p>
+                ) : (
+                  areReviewsVisible && reviews.map((review, index) => (
+                    <div key={index} className="mb-3">
+                      <div>Rating: {review.rating} / 5</div>
+                      <div>{review.content}</div>
+                      <div>Reviewed by: {review.user.username}</div>
+                    </div>
+                  ))
+                )}
                 </div>
               </div>
             </div>
