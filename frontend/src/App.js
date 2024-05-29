@@ -34,7 +34,7 @@ function App() {
   const { loginUser, logoutUser } = useContext(UserContext);
 
   return (
-    <UserContext.Provider value={{ loginUser, logoutUser }}>
+    //<UserContext.Provider value={{ loginUser, logoutUser }}>
     <CartProvider>
       <Router>
             <Navbar />
@@ -52,7 +52,7 @@ function App() {
         <Footer />
       </Router>
     </CartProvider>
-    </UserContext.Provider>
+    //</UserContext.Provider>
   );
 }
 export default App;

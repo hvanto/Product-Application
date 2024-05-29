@@ -1,31 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import signupFormValidation from '../components/signupFormValidation';
+import axios from 'axios';
+import { UserContext } from '../context/UserContext';
 
 function Profile() {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('currentUser')));
+  const { user } = useContext(UserContext); // Define 'user' here before using it
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
-  const [formValues, setFormValues] = useState({ ...currentUser, confirmPassword: currentUser.password });
+  const [formValues, setFormValues] = useState(user ? { ...user, confirmPassword: user.password } : {});
   const [editSuccess, setEditSuccess] = useState(false);
   const [accountDeleted, setAccountDeleted] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setFormValues({ ...user, confirmPassword: user.password });
+    }
+  }, [user]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const validateForm = () => {
-    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const validationErrors = signupFormValidation(formValues, storedUsers);
+  // const validateForm = () => {
+  //   const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+  //   const validationErrors = signupFormValidation(formValues, storedUsers);
 
-    if (formValues.confirmPassword !== formValues.password) {
-      validationErrors.confirmPassword = 'Passwords do not match';
-    }
+  //   if (formValues.confirmPassword !== formValues.password) {
+  //     validationErrors.confirmPassword = 'Passwords do not match';
+  //   }
 
-    return validationErrors;
-  };
+  //   return validationErrors;
+  // };
 
   // const saveChanges = () => {
   //   const validationErrors = validateForm();
@@ -84,14 +92,14 @@ function Profile() {
           <div className="card">
             <div className="card-body">
               <h1 className="mb-2 fs-4 text-center">Your Profile</h1>
-              {currentUser ? (
+              {user ? (
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
                   }}
                 >
                   <div className="mb-3">
-                    <label className="form-label">Name:</label>
+                    <label className="form-label">Username:</label>
                     <input
                       type="text"
                       className={`form-control ${errors.name ? 'is-invalid' : ''}`}
@@ -100,7 +108,7 @@ function Profile() {
                       onChange={handleChange}
                       disabled={!editMode}
                     />
-                    {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+                    {errors.name && <div className="invalid-feedback">{errors.username}</div>}
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Email:</label>
@@ -133,7 +141,7 @@ function Profile() {
                       </button>
                       <button type="button" className="btn btn-secondary mx-1" onClick={() => {
                         setEditMode(false);
-                        setFormValues({ ...currentUser, confirmPassword: currentUser.password }); 
+                        setFormValues({ ...user, confirmPassword: user.password }); 
                       }}>
                         Cancel
                       </button>
