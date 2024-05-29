@@ -70,9 +70,12 @@ const IndividualProduct = () => {
       return;
     }
 
+    console.log('Submitting review:', reviewContent, rating, productId, user.userId, user.username);
+
     try {
       const response = await axios.post('http://localhost:4000/api/review', {
         productId,
+        userId: user.userId,
         content: reviewContent,
         rating,
         reviewerName: user.username 
