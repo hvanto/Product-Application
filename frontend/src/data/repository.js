@@ -7,6 +7,7 @@ const USER_KEY = "user";
 // --- User ---------------------------------------------------------------------------------------
 async function verifyUser(email, password) {
   const response = await axios.post(API_HOST + "/api/users/login", { email, password });
+  console.log('response data' + response.data);
   const user = response.data;
   
   // NOTE: In this example the login is also persistent as it is stored in local storage.
