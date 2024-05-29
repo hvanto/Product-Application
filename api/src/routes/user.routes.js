@@ -16,4 +16,5 @@ module.exports = (express, app) => {
 
   // Add routes to server.
   app.use("/api/users", router);
+
 };

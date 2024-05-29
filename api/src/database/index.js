@@ -129,12 +129,12 @@ const users = [
   {
     username: 'isaac',
     email: 'isaac@gmail.com',
-    password: 'abc123!'
+    password: 'abcD123!'
   },
   {
     username: 'henry',
     email: 'henry@gmail.com',
-    password: 'def456!'
+    password: 'Abcd1234!'
   }
 ];
 

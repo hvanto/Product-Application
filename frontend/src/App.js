@@ -15,7 +15,7 @@ import Backyardfarm from './pages/Backyardfarm';
 import Seminars from './pages/Seminars';
 import IndividualProduct from './pages/IndividualProductPage';
 import { CartProvider } from './context/CartContext';
-import UsernameContext from './context/UsernameContext';
+import { UsernameContext } from './context/UsernameContext';
 
 function App() {
 

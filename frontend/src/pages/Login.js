@@ -1,83 +1,103 @@
-import { useState, useContext } from 'react';
-import useForm from '../hooks/useForm';
-import validate from '../components/loginFormValidation';
-import { verifyUser } from "../data/repository";
-import { useNavigate, Link } from "react-router-dom";
-import UsernameContext from '../context/UsernameContext';
+import React, { useState, useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import validate from '../components/signupFormValidation'; // Import validate function
+import axios from 'axios';
+import { UsernameContext } from '../context/UsernameContext';
+import { verifyUser } from '../data/repository';
 
 const Login = () => {
     const navigate = useNavigate();
-    const [loginSuccess, setLoginSuccess] = useState(false);
+    const [fields, setFields] = useState({ username: "", password: "" });
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [errors, setErrors] = useState({});
     const { loginUser } = useContext(UsernameContext);
+    const [loginSuccess, setLoginSuccess] = useState(false);
 
-    const {
-        values,
-        errors,
-        handleChange,
-        handleSubmit,
-        setValues,
-        setErrors,
-    } = useForm(login, validate);
 
-    function login() {
-        const { email, password } = values;
-        console.log("Attempting login with email:", email);
-        console.log("Attempting login with password:", password);
-        const user = verifyUser(email, password); 
-        console.log("Verification result:", user);
-        if (user) { 
-            console.log("Login successful");
-            // Set login state in local storage
-            localStorage.setItem('isLoggedIn', true);
-            loginUser(values.email);
-            localStorage.setItem('currentUser', JSON.stringify(user)); // Store current user data
-            setLoginSuccess(true);
-            setTimeout(() => {
-                navigate('/profile');
-            }, 3000);
-        } else {
-            console.log("Login failed");
-            // Clear password field
-            setValues({ ...values, password: '' }); 
-            setErrors({...errors, auth: "Email and password don't match, please try again."}); // Set authentication error
+    const handleInputChange = (event) => {
+        setFields({ ...fields, [event.target.name]: event.target.value });
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+    
+        const user = await verifyUser(fields.username, fields.password);
+    
+        if(user === null) {
+          // Login failed, reset password field to blank and set error message.
+          setFields({ ...fields, password: "" });
+          setErrorMessage("Email or password invalid, please try again.");
+          return;
         }
-    }
+    
+        // Set user state.
+        loginUser(user.username);
+    
+        // Navigate to the home page.
+        setTimeout(() => {
+            navigate('/profile');
+        }, 3000);
+      };
+
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+
+    //     const validationErrors = validate(fields); // Use validate function to get errors
+    //     setErrors(validationErrors);
+
+    //     if (Object.keys(validationErrors).length === 0) {
+    //         try {
+    //             const response = await axios.post('http://localhost:4000/api/user', fields);
+    //             loginUser(response.data.email);
+    //             setLoginSuccess(true);
+    //             setTimeout(() => {
+    //                 navigate('/profile');
+    //             }, 3000);
+    //         } catch (error) {
+    //             setFields({ ...fields, password: "" });
+    //             setErrorMessage("Email and/or password invalid, please try again.");
+    //             console.error('Error logging in:', error);
+    //         }
+    //     }
+    // };
 
     return (
         <div className="container-fluid">
-            <div className="row justify-content-center mt-4"> 
+            <div className="row justify-content-center mt-4">
                 <div className="col-md-4">
                     <div className="card custom-form">
                         <div className="card-body">
-                            <div className="text-center mb-4"> 
+                            <div className="text-center mb-4">
                                 <h1 className="mb-2 fs-4">Login</h1>
                             </div>
-                            {loginSuccess ? (
-                                <p className="text-success mb-3 text-center">Log in success! You are now logged in & will be redirected to your profile.</p>
-                            ) : (
+                            {/* // If login is successful, display success message, otherwise display login form */}
+                            {loginSuccess ? (<p className="text-success mb-3 text-center">Log in success! You are now logged in & will be redirected to your profile.</p>) : (
                                 <form onSubmit={handleSubmit} noValidate>
-                                    <div className="mb-3"> 
-                                        <label htmlFor="email" className="control-label mb-2">Enter Email:</label> 
+
+                                    {/* Email section for form */}
+                                    <div className="mb-3">
+                                        <label htmlFor="email" className="control-label mb-2">Enter Email:</label>
                                         <input name="email" id="email" className={`form-control ${errors.email && 'is-invalid'}`}
-                                            value={values.email} onChange={handleChange} />
-                                        {errors.email && (
-                                            <div className="invalid-feedback">{errors.email}</div>
-                                        )}
+                                            value={fields.email} onChange={handleInputChange} />
+                                        {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
                                     </div>
-                                    <div className="mb-3"> 
-                                        <label htmlFor="password" className="control-label mb-2">Enter Password:</label> 
-                                        <input type="password" name="password" id="password" className={`form-control ${errors.password && 'is-invalid'}`}
-                                            value={values.password} onChange={handleChange} />
-                                        {errors.password && (
-                                            <div className="invalid-feedback">{errors.password}</div>
-                                        )}
+
+                                    {/* Password section for form */}
+                                    <div className="mb-3">
+                                        <label htmlFor="password" className="control-label mb-2">Enter Password:</label>
+                                        <input type="password" name="password" id="password" className={`form-control ${errors.password && 'is-invalid'}`} value={fields.password} onChange={handleInputChange} />
+                                        {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
                                     </div>
-                                    {errors.auth && (
-                                        <p className="text-danger mb-3 text-center">{errors.auth}</p>
-                                    )}
+
+                                    {/* Error message section */}
+                                    {errorMessage && (<p className="text-danger mb-3 text-center">{errorMessage}</p>)} {}
+
+                                    {/* Submit button */}
                                     <div className="text-center">
                                         <button type="submit" className="btn custom-button">Log In</button>
                                     </div>
+
+                                    {/* Sign up link */}
                                     <div className="mt-3 text-center">
                                         Don't have an account? <Link to="/signup">Sign up!</Link>
                                     </div>

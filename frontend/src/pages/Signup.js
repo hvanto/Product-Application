@@ -3,43 +3,29 @@ import { useNavigate, Link } from 'react-router-dom';
 import useForm from "../hooks/useForm";
 import validate from '../components/signupFormValidation';
 import { addUser, generateUniqueId } from "../data/repository";
+import axios from 'axios';
 
 const Signup = () => {
   const navigate = useNavigate();
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const { handleChange, handleSubmit, values, errors } = useForm(submit, validate);
 
-  const {
-    values,
-    errors,
-    handleChange,
-    handleSubmit,
-  } = useForm(signup, validate);
-
-  function signup() {
-
-    const uniqueId = generateUniqueId();
-
-    // Storing user details in local storage
-    const userData = {
-      id: uniqueId, 
-      name: values.name,
+  async function submit() {
+    const user = {
+      username: values.name,
       email: values.email,
-      password: values.password,
-      joinDate: new Date().toISOString(),
+      password: values.password
     };
 
-    // Add user to local storage
-    addUser(userData);
-
-    // Set signup success state to true
-    setSignupSuccess(true);
-    localStorage.setItem('isLoggedIn', true);
-    localStorage.setItem('currentUser', JSON.stringify(userData)); // Store current user data
-    
-    // Redirect to home page after 3 seconds
-    setTimeout(() => {
-      navigate('/profile');
-    }, 3500);
+    try {
+      await addUser(user);
+      setSignupSuccess(true);
+      setTimeout(() => {
+        navigate('/profile');
+      }, 3000);
+    } catch (error) {
+      console.error('Error creating user:', error);
+    }
   }
 
   return (
@@ -82,6 +68,7 @@ const Signup = () => {
                     )}
                   </div>
                   <div className="text-center"> 
+                  
                     <button type="submit" className="btn custom-button">Sign Up</button>
                   </div>
                   <div className="mt-3 text-center"> 

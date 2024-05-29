@@ -1,6 +1,25 @@
-import React from "react";
+import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
-// Default initial value for username context is null.
-const UsernameContext = React.createContext(null);
+// Create UserContext
+export const UsernameContext = createContext();
 
-export default UsernameContext;
+// UserContext Provider component
+
+export const UserProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    
+    useEffect(() => {
+        const fetchUser = async () => {
+        const response = await axios.get("http://localhost:4000/api/users");
+        setUser(response.data);
+        };
+        fetchUser();
+    }, []);
+    
+    return (
+        <UsernameContext.Provider value={{ user, setUser }}>
+        {children}
+        </UsernameContext.Provider>
+    );
+};
