@@ -11,12 +11,12 @@ const IndividualProduct = () => {
   const [reviewContent, setReviewContent] = useState('');
   const [reviewerName, setReviewerName] = useState('');
   const [rating, setRating] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [remainingChars, setRemainingChars] = useState(100);
   const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [areReviewsVisible, setAreReviewsVisible] = useState(false);
   const { user, loginUser } = useContext(UserContext);
+  const isLoggedIn = Boolean(user);
 
     const handleCancelReview = () => {
       setIsReviewFormVisible(false);
@@ -78,7 +78,7 @@ const IndividualProduct = () => {
         userId: user.userId,
         content: reviewContent,
         rating,
-        reviewerName: user.username 
+        reviewerName: user.name 
       });
 
     if (response.status === 200) {
@@ -100,7 +100,7 @@ const IndividualProduct = () => {
   const navigate = useNavigate();  
   // Function to handle login
   const handleLogin = () => {
-    setIsLoggedIn(true);
+    loginUser();
     //navigate('/login');
   };
 
@@ -110,6 +110,10 @@ const IndividualProduct = () => {
 
   const onStarClick = (nextValue) => {
     setRating(nextValue);
+  };
+
+  const handleFollow = async (userIdToFollow) => {
+
   };
 
   return (
@@ -196,13 +200,22 @@ const IndividualProduct = () => {
                   )
                 )}
                 {areReviewsVisible && reviews.length === 0 ? (
-                  <p>No reviews yet. Be the first to write a review!</p>
+                  <p>
+                    No reviews yet. Be the first to{' '}
+                    <a href="#" onClick={(e) => { e.preventDefault(); setIsReviewFormVisible(true); }}>
+                      write a review!
+                    </a>
+                  </p>
                 ) : (
                   areReviewsVisible && reviews.map((review, index) => (
                     <div key={index} className="mb-3">
                       <div>Rating: {review.rating} / 5</div>
                       <div>{review.content}</div>
-                      <div>Reviewed by: {review.user.username}</div>
+                      <div>Reviewed by: {review.user.username}
+                        <button className="btn btn-small btn-primary" onClick={() => handleFollow(review.user.userId)}>
+                          Follow
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}
