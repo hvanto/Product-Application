@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import signupFormValidation from '../components/signupFormValidation';
-import { logoutUser, deleteAccount } from '../data/repository';
 
 function Profile() {
   const navigate = useNavigate();
@@ -47,14 +46,14 @@ function Profile() {
     setCurrentUser(formValues);
   };
 
-  const handleDeleteAccount = () => {
-    deleteAccount(currentUser, logoutUser);
-    setAccountDeleted(true);
+  // const handleDeleteAccount = () => {
+  //   deleteAccount(currentUser, logoutUser);
+  //   setAccountDeleted(true);
 
-    setTimeout(() => {
-      navigate('/'); 
-    }, 3500); 
-  };
+  //   setTimeout(() => {
+  //     navigate('/'); 
+  //   }, 3500); 
+  // };
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -148,13 +147,12 @@ function Profile() {
                       <button type="button" class="btn btn-primary mx-1" onClick={() => setEditMode(true)}>
                         Edit Profile
                       </button>
-                      <button type="button" className="btn btn-danger mx-1" onClick={() => { logoutUser(); navigate('/login'); }}>
+                      <button type="button" className="btn btn-danger mx-1">
                         Logout
                       </button>
                       <button
                       type="button"
                       className="btn btn-danger mx-1"
-                      onClick={() => { handleDeleteAccount(); }}
                       >
                       Delete Account
                     </button>

@@ -46,7 +46,7 @@ const Products = () => {
               <Link to={`/products/${product.productId}`} className="product-link">
                 <h2 className="fs-6 mb-1">{product.productName}</h2>
               </Link>
-              <p className="fs-6 mb-1" style={{ fontWeight: 'lighter', marginBottom: '0' }}>
+              <div className="fs-6 mb-1" style={{ fontWeight: 'lighter', marginBottom: '0' }}>
                 {product.special ? (
                   <>
                     <p className="card-text"><s>${product.price}</s> ${product.specialPrice}</p>
@@ -54,7 +54,7 @@ const Products = () => {
                 ) : (
                   <p className="card-text">${product.price}</p>
                 )}
-              </p>
+              </div>
               {getProductQuantity(product.productId) === 0 ? (
                 <button
                   className="btn custom-button mt-1"

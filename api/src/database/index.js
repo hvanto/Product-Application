@@ -156,13 +156,9 @@ async function seedData() {
     await db.user.create({ username: user.username, email: user.email, password_hash: hash});
   }
 
-
   // Create carts for each user
   await db.cart.create({ userId: 1 });
   await db.cart.create({ userId: 2 });
-
-  
-
 
   //Add products
   for (const product of products) {

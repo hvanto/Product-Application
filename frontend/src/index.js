@@ -7,8 +7,8 @@ import reportWebVitals from './reportWebVitals';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-initUsers();
-initSpecials();
+// initUsers();
+// initSpecials();
 root.render(
   <React.StrictMode>
     <App />

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useForm from "../hooks/useForm";
 import validate from '../components/signupFormValidation';
-import { addUser, generateUniqueId } from "../data/repository";
 import axios from 'axios';
 
 const Signup = () => {
@@ -17,15 +16,15 @@ const Signup = () => {
       password: values.password
     };
 
-    try {
-      await addUser(user);
-      setSignupSuccess(true);
-      setTimeout(() => {
-        navigate('/profile');
-      }, 3000);
-    } catch (error) {
-      console.error('Error creating user:', error);
-    }
+    // try {
+    //   await addUser(user);
+    //   setSignupSuccess(true);
+    //   setTimeout(() => {
+    //     navigate('/profile');
+    //   }, 3000);
+    // } catch (error) {
+    //   console.error('Error creating user:', error);
+    // }
   }
 
   return (
