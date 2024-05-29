@@ -23,6 +23,8 @@ exports.login = async (req, res) => {
     }
   });
 
+  console.log('login user controller' + user);
+
   if (user === null) {
     res.status(404).send("User not found.");
     return;

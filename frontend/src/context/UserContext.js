@@ -16,6 +16,7 @@ export const UserProvider = ({ children }) => {
         console.log(response.data);
         setUser(response.data);
         setLoggedIn(true);
+        // Create a cart for the user here?
     };
 
     const logoutUser = () => {

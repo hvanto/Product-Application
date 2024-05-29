@@ -20,25 +20,31 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        console.log('fields.email: ' + fields.email);
+        console.log('fields password: ' + fields.password);
     
         const user = await verifyUser(fields.email, fields.password);
-        console.log(user);
-    
+        console.log('handle submit', user);
+
+        console.log('user null ', user === null);
+
         if(user === null) {
           // Login failed, reset password field to blank and set error message.
           setFields({ ...fields, password: "" });
           setErrorMessage("Email or password invalid, please try again.");
           return;
         }
-    
+        console.log('before loginUsre called: ');
         // Set user state.
-        await loginUser(user);
+        await loginUser(fields.email, fields.password);
         console.log('loginUser called');
+        setLoginSuccess(true);
     
-        // Navigate to the profile page.
-        // setTimeout(() => {
-        //     navigate('/profile');
-        // }, 3000);
+        //Navigate to the profile page.
+        setTimeout(() => {
+            navigate('/profile');
+        }, 2500);
     };
 
     // const handleSubmit = async (event) => {
