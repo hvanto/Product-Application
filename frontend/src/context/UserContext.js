@@ -52,6 +52,7 @@ export const UserProvider = ({ children }) => {
 
     const createUser = async (user) => {
         try {
+            console.log('user', user)
             const response = await axios.post("http://localhost:4000/api/users", user);
             setUser(response.data);
             setLoggedIn(true);

@@ -7,21 +7,28 @@ import { UserContext } from '../context/UserContext';
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [signupSuccess, setSignupSuccess] = useState(false);
-  const { handleChange, handleSubmit, values, errors } = useForm(submit, validate);
   const { createUser } = useContext(UserContext);
-
-
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const { values, errors, handleChange, handleSubmit } = useForm(submit, validate);
 
   async function submit() {
-    const user = {
-      username: values.name,
-      email: values.email,
-      password: values.password
-    };
-
     try {
-      createUser(user);
+
+      // Check to see if email already exists in DB
+      const response = await axios.get(`http://localhost:4000/api/users`);
+
+
+      // If no errors, create user.
+      console.log('values', values);
+      await createUser({
+        username: values.name,
+        email: values.email,
+        password: values.password
+      });
+      setSignupSuccess(true);
+      setTimeout(() => {
+        navigate('/profile');
+      }, 2500);
     } catch (error) {
       console.error('Signup failed:', error);
     }
