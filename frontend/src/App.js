@@ -15,7 +15,7 @@ import Backyardfarm from './pages/Backyardfarm';
 import Seminars from './pages/Seminars';
 import IndividualProduct from './pages/IndividualProductPage';
 import { CartProvider } from './context/CartContext';
-import { UserContext } from './context/UserContext';
+import { UserProvider } from './context/UserContext';
 
 function App() {
 
@@ -34,25 +34,25 @@ function App() {
   //const { loginUser, logoutUser } = useContext(UserContext);
 
   return (
-    //<UserContext.Provider value={{ loginUser, logoutUser }}>
-    <CartProvider>
-      <Router>
-            <Navbar />
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/products" element={<Products />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/backyardfarm" element={<Backyardfarm />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/seminars" element={<Seminars />} />
-                  <Route path="/products/:productId" element={<IndividualProduct />} />
-                </Routes>
-        <Footer />
-      </Router>
-    </CartProvider>
-    //</UserContext.Provider>
+    <UserProvider>
+      <CartProvider>
+        <Router>
+              <Navbar />
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/products" element={<Products />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/backyardfarm" element={<Backyardfarm />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/seminars" element={<Seminars />} />
+                    <Route path="/products/:productId" element={<IndividualProduct />} />
+                  </Routes>
+          <Footer />
+        </Router>
+      </CartProvider>
+    </UserProvider>
   );
 }
 export default App;

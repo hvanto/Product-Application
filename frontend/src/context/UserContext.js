@@ -6,17 +6,18 @@ export const UserContext = createContext();
 
 // UserContext Provider component
 export const UserProvider = ({ children }) => {
-    console.log('UserProvider rendered');
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
 
     const loginUser = async (email, password) => {
-        console.log('LOGIN USER')
-        const response = await axios.post("http://localhost:4000/api/users/login", { email, password });
-        console.log(response.data);
-        setUser(response.data);
-        setLoggedIn(true);
-        // Create a cart for the user here?
+        try {
+            const response = await axios.post("http://localhost:4000/api/users/login", { email, password });
+            setUser(response.data);
+            setLoggedIn(true);
+        } catch (error) {
+            console.error('Login failed:', error);
+            throw error;
+        }
     };
 
     const logoutUser = () => {

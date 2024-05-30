@@ -6,7 +6,7 @@ import { UserContext } from '../context/UserContext';
 
 function Profile() {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext); // Define 'user' here before using it
+  const { user, logoutUser } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
   const [formValues, setFormValues] = useState(user ? { ...user, confirmPassword: user.password } : {});
@@ -24,56 +24,9 @@ function Profile() {
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const validateForm = () => {
-  //   const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-  //   const validationErrors = signupFormValidation(formValues, storedUsers);
 
-  //   if (formValues.confirmPassword !== formValues.password) {
-  //     validationErrors.confirmPassword = 'Passwords do not match';
-  //   }
 
-  //   return validationErrors;
-  // };
 
-  // const saveChanges = () => {
-  //   const validationErrors = validateForm();
-  //   if (Object.keys(validationErrors).length > 0) {
-  //     setErrors(validationErrors);
-  //     return;
-  //   }
-
-  //   const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-  //   const updatedUsers = storedUsers.map((u) => (u.id === currentUser.id ? formValues : u));
-
-  //   setEditSuccess(true);
-  //   setErrors({});
-  //   setEditMode(false);
-  //   setCurrentUser(formValues);
-  // };
-
-  // const handleDeleteAccount = () => {
-  //   deleteAccount(currentUser, logoutUser);
-  //   setAccountDeleted(true);
-
-  //   setTimeout(() => {
-  //     navigate('/'); 
-  //   }, 3500); 
-  // };
-
-  // useEffect(() => {
-  //   const isLoggedIn = localStorage.getItem('isLoggedIn');
-  //   if (!isLoggedIn) {
-  //     navigate('/login');
-  //   }
-
-  //   if (editSuccess) {
-  //     const timeoutId = setTimeout(() => {
-  //       setEditSuccess(false);
-  //     }, 3000); 
-
-  //     return () => clearTimeout(timeoutId); 
-  //   }
-  // }, [navigate, editSuccess]); 
 
   return (
     <div className="container-fluid">
@@ -93,60 +46,50 @@ function Profile() {
             <div className="card-body">
               <h1 className="mb-2 fs-4 text-center">Your Profile</h1>
               {user ? (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}
-                >
+
+                <form onSubmit={(e) => {e.preventDefault();}}>
+
+                  {/* Username Section */}
                   <div className="mb-3">
+
                     <label className="form-label">Username:</label>
-                    <input
-                      type="text"
-                      className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                      name="name"
-                      value={formValues.name}
-                      onChange={handleChange}
-                      disabled={!editMode}
-                    />
+                    <input type="text" className={`form-control ${errors.name ? 'is-invalid' : ''}`} 
+                    name="name" value={formValues.username} onChange={handleChange} disabled={!editMode} />
+
                     {errors.name && <div className="invalid-feedback">{errors.username}</div>}
                   </div>
+
+
+                  {/* Email Section */}
                   <div className="mb-3">
                     <label className="form-label">Email:</label>
-                    <input
-                      type="email"
-                      class={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                      name="email"
-                      value={formValues.email}
-                      onChange={handleChange}
-                      disabled={!editMode}
-                    />
+                    <input type="email" class={`form-control ${errors.email ? 'is-invalid' : ''}`} 
+                    name="email" value={formValues.email} onChange={handleChange} disabled={!editMode} />
+
                     {errors.email && <div class="invalid-feedback">{errors.email}</div>}
                   </div>
+
+                  {/* Password Section */}
                   <div className="mb-3">
                     <label class="form-label">Password:</label>
-                    <input
-                      type="password"
-                      class={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                      name="password"
-                      value={formValues.password}
-                      onChange={handleChange}
-                      disabled={!editMode}
-                    />
+                    <input type="password" class={`form-control ${errors.password ? 'is-invalid' : ''}`} 
+                    name="password" value={formValues.password} onChange={handleChange} disabled={!editMode} />
+
                     {errors.password && <div class="invalid-feedback">{errors.password}</div>}
                   </div>
+
+                  {/* Confirm Password Section */}
                   {editMode ? (
                     <div className="text-center">
                       <button type="button" class="btn btn-success mx-1">
                         Save Changes
                       </button>
-                      <button type="button" className="btn btn-secondary mx-1" onClick={() => {
-                        setEditMode(false);
-                        setFormValues({ ...user, confirmPassword: user.password }); 
-                      }}>
-                        Cancel
-                      </button>
+                      <button type="button" className="btn btn-secondary mx-1" onClick={() => { setEditMode(false); setFormValues({ ...user, confirmPassword: user.password }); }}> Cancel </button>
                     </div>
+            
                   ) : (
+
+                    // Edit Profile Button
                     <div className="text-center">
                       <button type="button" class="btn btn-primary mx-1" onClick={() => setEditMode(true)}>
                         Edit Profile
@@ -154,16 +97,12 @@ function Profile() {
                       <button type="button" className="btn btn-danger mx-1">
                         Logout
                       </button>
-                      <button
-                      type="button"
-                      className="btn btn-danger mx-1"
-                      >
-                      Delete Account
-                    </button>
+                      <button type="button" className="btn btn-danger mx-1" >Delete Account</button>
                     </div>
                   )}
                 </form>
               ) : (
+                // Logged out message
                 <p className="text-center">
                   Please <Link to="/login">log in</Link> to view your profile.
                 </p>
