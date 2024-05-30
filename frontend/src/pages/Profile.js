@@ -125,7 +125,12 @@ function Profile() {
         </div>
       )}
 
+      {/* Welcome Message to user */}
+      <div className="text-center mt-4">
+        {user && <h1 style={{ fontWeight: 'bold', fontSize: '40px' }}>Welcome, {user.username}!</h1>}
+      </div>
 
+      {/* Profile Form */}
       <div className="row justify-content-center mt-4">
         <div className="col-md-6 mx-auto">
           <div className="card">

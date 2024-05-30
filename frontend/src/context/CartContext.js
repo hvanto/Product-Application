@@ -20,9 +20,9 @@ export const CartProvider = ({ children }) => {
     try {
 
       ///////////////////////////
-      ///////////// VERIFY
+      ///////////// VERIFY user.userId
       ///////////////////////////
-      const userId = user.userId;
+      const userId = 1;
       const cartId = userId
       const response = await axios.get(`http://localhost:4000/api/cart/${cartId}`);
       setCart(response.data);
@@ -38,7 +38,7 @@ export const CartProvider = ({ children }) => {
       ///////////////////////////
       ///////////// VERIFY (was previous set default to 1)
       ///////////////////////////
-      const userId = user.userId;
+      const userId = 1;
       await axios.post('http://localhost:4000/api/cart/add', { userId, productId, quantity });
       // Refetch the cart after adding the product
       fetchCart();
@@ -46,7 +46,7 @@ export const CartProvider = ({ children }) => {
       console.error('Error adding to cart:', error);
     }
   };
-S
+
   // Update product quantity in cart
   const updateCartItem = async (cartLineId, quantity) => {
     try {
