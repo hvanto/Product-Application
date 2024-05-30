@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useForm from "../hooks/useForm";
 import validate from '../components/signupFormValidation';
 import axios from 'axios';
+import { UserContext } from '../context/UserContext';
 
 const Signup = () => {
   const navigate = useNavigate();
   const [signupSuccess, setSignupSuccess] = useState(false);
   const { handleChange, handleSubmit, values, errors } = useForm(submit, validate);
+  const { createUser } = useContext(UserContext);
+
+
 
   async function submit() {
     const user = {
@@ -16,15 +20,11 @@ const Signup = () => {
       password: values.password
     };
 
-    // try {
-    //   await addUser(user);
-    //   setSignupSuccess(true);
-    //   setTimeout(() => {
-    //     navigate('/profile');
-    //   }, 3000);
-    // } catch (error) {
-    //   console.error('Error creating user:', error);
-    // }
+    try {
+      createUser(user);
+    } catch (error) {
+      console.error('Signup failed:', error);
+    }
   }
 
   return (

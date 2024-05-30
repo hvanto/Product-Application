@@ -29,6 +29,13 @@ async function createUser(user) {
   return response.data;
 }
 
+// // edit existing logged in user and update with new user data from edit profile
+// async function updateUser(id, user) {
+//   const response = await axios.put(API_HOST + `/api/users/update/${id}`, user);
+
+//   return response.data;
+// }
+
 // --- Post ---------------------------------------------------------------------------------------
 async function getPosts() {
   const response = await axios.get(API_HOST + "/api/posts");
@@ -58,5 +65,5 @@ function removeUser() {
 export {
   verifyUser, findUser, createUser,
   getPosts, createPost,
-  getUser, removeUser
+  getUser, removeUser, updateUser
 }
