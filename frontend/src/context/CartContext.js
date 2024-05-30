@@ -1,5 +1,6 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { UserContext } from './UserContext';
 
 // Create CartContext
 export const CartContext = createContext();
@@ -7,6 +8,7 @@ export const CartContext = createContext();
 // CartContext Provider component
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     fetchCart();
@@ -14,7 +16,8 @@ export const CartProvider = ({ children }) => {
 
   const fetchCart = async () => {
     try {
-      const userId = 1; //UPDATE THIS TO FETCH USER ID
+      //const userId = user.id; //UPDATE THIS TO FETCH USER ID
+      const userId = 1; 
       const cartId = userId
       const response = await axios.get(`http://localhost:4000/api/cart/${cartId}`);
       setCart(response.data);

@@ -9,7 +9,10 @@ module.exports = (express, app) => {
   router.post("/", controller.create);
 
   // Select all reviews for a specific product.
-  router.get("/:productId", controller.allForProduct);
+  router.get("/product/:productId", controller.allForProduct);
+
+  // Delete a specific review.
+  router.delete("/:reviewId", controller.delete);
 
   // Add routes to server.
   app.use("/api/review", router);
