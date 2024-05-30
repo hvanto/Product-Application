@@ -9,14 +9,28 @@ const Signup = () => {
   const navigate = useNavigate();
   const { createUser } = useContext(UserContext);
   const [signupSuccess, setSignupSuccess] = useState(false);
-  const { values, errors, handleChange, handleSubmit } = useForm(submit, validate);
+  const { values, errors, setErrors, handleChange, handleSubmit } = useForm(submit, validate);
 
   async function submit() {
     try {
-
       // Check to see if email already exists in DB
       const response = await axios.get(`http://localhost:4000/api/users`);
+      console.log('response', response.data);
 
+      const emailExists = response.data.find(user => user.email === values.email);
+      console.log('emailExists', emailExists);
+
+      if (emailExists) {
+        // Set an error for the email field.
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          email: 'Email already exists, please use a unique email address.'
+        }));
+
+        // Clear email field
+        values.email = '';
+        return; // Stop further execution if email exists
+      }
 
       // If no errors, create user.
       console.log('values', values);
@@ -74,7 +88,6 @@ const Signup = () => {
                     )}
                   </div>
                   <div className="text-center"> 
-                  
                     <button type="submit" className="btn custom-button">Sign Up</button>
                   </div>
                   <div className="mt-3 text-center"> 
