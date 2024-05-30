@@ -17,32 +17,24 @@ async function verifyUser(email, password) {
   return user;
 }
 
+// function to create a new user
 async function findUser(id) { 
   const response = await axios.get(API_HOST + `/api/users/select/${id}`);
 
   return response.data;
 }
 
-async function createUser(user) {
-  const response = await axios.post(API_HOST + "/api/users", user);
-
-  return response.data;
-}
-
-// // edit existing logged in user and update with new user data from edit profile
-// async function updateUser(id, user) {
-//   const response = await axios.put(API_HOST + `/api/users/update/${id}`, user);
-
-//   return response.data;
-// }
-
 // --- Post ---------------------------------------------------------------------------------------
+
+
+// function to create a new user
 async function getPosts() {
   const response = await axios.get(API_HOST + "/api/posts");
 
   return response.data;
 }
 
+// function to create a new post
 async function createPost(post) {
   const response = await axios.post(API_HOST + "/api/posts", post);
 
@@ -50,20 +42,25 @@ async function createPost(post) {
 }
 
 // --- Helper functions to interact with local storage --------------------------------------------
+
+// function to create a new user
 function setUser(user) {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
+// function to create a new user
 function getUser() {
   return JSON.parse(localStorage.getItem(USER_KEY));
 }
 
+// function to create a new user
 function removeUser() {
   localStorage.removeItem(USER_KEY);
 }
 
+// Exporting the functions
 export {
-  verifyUser, findUser, createUser,
+  verifyUser, findUser,
   getPosts, createPost,
-  getUser, removeUser, updateUser
+  getUser, removeUser
 }

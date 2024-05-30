@@ -15,7 +15,7 @@ exports.one = async (req, res) => {
   res.json(user);
 };
 
-// Select one user from the database if email and password are a match.
+// Checks if the user exists and the password is correct.
 exports.login = async (req, res) => {
   const user = await db.user.findOne({
     where: {

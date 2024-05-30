@@ -1,5 +1,7 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { UserContext } from '../context/UserContext';
+
 
 // Create CartContext
 export const CartContext = createContext();
@@ -7,14 +9,20 @@ export const CartContext = createContext();
 // CartContext Provider component
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     fetchCart();
   }, []);
 
+  // Fetch the cart data from the backend
   const fetchCart = async () => {
     try {
-      const userId = 1; //UPDATE THIS TO FETCH USER ID
+
+      ///////////////////////////
+      ///////////// VERIFY
+      ///////////////////////////
+      const userId = user.userId;
       const cartId = userId
       const response = await axios.get(`http://localhost:4000/api/cart/${cartId}`);
       setCart(response.data);
@@ -26,7 +34,11 @@ export const CartProvider = ({ children }) => {
   // Add product to cart
   const addToCart = async (productId, quantity) => {
     try {
-      const userId = 1; //UPDATE THIS TO FETCH USER ID
+
+      ///////////////////////////
+      ///////////// VERIFY (was previous set default to 1)
+      ///////////////////////////
+      const userId = user.userId;
       await axios.post('http://localhost:4000/api/cart/add', { userId, productId, quantity });
       // Refetch the cart after adding the product
       fetchCart();
@@ -34,7 +46,7 @@ export const CartProvider = ({ children }) => {
       console.error('Error adding to cart:', error);
     }
   };
-
+S
   // Update product quantity in cart
   const updateCartItem = async (cartLineId, quantity) => {
     try {
@@ -76,6 +88,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Return the provider component
   return (
     <CartContext.Provider value={{ cart, fetchCart, addToCart, removeFromCart, increaseQuantity, decreaseQuantity }}>
       {children}
