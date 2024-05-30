@@ -54,6 +54,7 @@ function Profile() {
     }
   };
 
+  // Form Validation
   const validateForm = (formValues) => { 
     let errors = {};
     let isValid = true;
@@ -94,9 +95,10 @@ function Profile() {
       isValid = false;
     }
 
-    
+    // 
     setErrors(errors);
 
+    // If no issues, return true
     return isValid;
   }
 
@@ -168,6 +170,7 @@ function Profile() {
                     </div>
                   )}
                 </form>
+                // If user is not logged in, display message to log in
               ) : (
                 <p className="text-center">
                   Please <Link to="/login">log in</Link> to view your profile.
