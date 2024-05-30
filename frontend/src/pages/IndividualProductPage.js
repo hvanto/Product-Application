@@ -241,14 +241,14 @@ const IndividualProduct = () => {
                           </div>
                           <button
                             type="submit"
-                            className="btn custom-button"
+                            className="btn custom-button mt-2"
                             style={{ marginRight: "10px" }}
                           >
                             Submit Review
                           </button>
                           <button
                             type="button"
-                            className="btn custom-button"
+                            className="btn custom-button mt-2"
                             onClick={handleCancelReview}
                           >
                             Cancel Review
