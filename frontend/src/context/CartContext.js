@@ -11,16 +11,17 @@ export const CartProvider = ({ children }) => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    fetchCart();
-  }, []);
+    if (user) {
+      fetchCart();
+    }
+  }, [user]);
 
   // Fetch the cart data from the backend
   const fetchCart = async () => {
+    if (!user) {
+      return;
+    }
     try {
-
-      ///////////////////////////
-      ///////////// VERIFY user.userId
-      ///////////////////////////
       const userId = user.userId;
       const cartId = userId
       const response = await axios.get(`http://localhost:4000/api/cart/${cartId}`);
@@ -32,11 +33,10 @@ export const CartProvider = ({ children }) => {
 
   // Add product to cart
   const addToCart = async (productId, quantity) => {
+    if (!user) {
+      return;
+    }
     try {
-
-      ///////////////////////////
-      ///////////// VERIFY (was previous set default to 1)
-      ///////////////////////////
       const userId = user.userId;
       await axios.post('http://localhost:4000/api/cart/add', { userId, productId, quantity });
       // Refetch the cart after adding the product

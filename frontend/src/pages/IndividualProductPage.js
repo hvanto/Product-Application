@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import StarRatingComponent from "react-star-rating-component";
 import { UserContext } from "../context/UserContext";
+import { CartContext } from "../context/CartContext";
 
 const IndividualProduct = () => {
   // All of the state variables
@@ -18,6 +19,22 @@ const IndividualProduct = () => {
   const { user, loginUser } = useContext(UserContext);
   const isLoggedIn = Boolean(user);
   const [hasUserReviewed, setHasUserReviewed] = useState(false);
+  const { cart, addToCart, decreaseQuantity, increaseQuantity } =
+    useContext(CartContext);
+
+  const getProductQuantity = (productId) => {
+    let quantity = 0;
+
+    if (cart && cart.cartLines) {
+      cart.cartLines.forEach((cartLine) => {
+        if (cartLine.productId === productId) {
+          quantity = cartLine.quantity;
+        }
+      });
+    }
+
+    return quantity;
+  };
 
   const handleCancelReview = () => {
     setIsReviewFormVisible(false);
@@ -47,7 +64,7 @@ const IndividualProduct = () => {
           `http://localhost:4000/api/product/select/${productId}`
         );
         setProduct(response.data);
-      // Catch for error in fetching product
+        // Catch for error in fetching product
       } catch (error) {
         console.error("Error fetching product:", error);
       }
@@ -154,9 +171,7 @@ const IndividualProduct = () => {
     setRating(nextValue);
   };
 
-  const handleFollow = async (userIdToFollow) => {
-    
-  };
+  const handleFollow = async (userIdToFollow) => {};
 
   return (
     <div className="container-fluid">
@@ -165,7 +180,6 @@ const IndividualProduct = () => {
           <div className="card custom-form">
             <div className="card-body">
               <div className="row">
-
                 {/* Product image */}
                 <div className="col-md-4">
                   <div className="card-img-container">
@@ -179,7 +193,6 @@ const IndividualProduct = () => {
 
                 {/* Product details */}
                 <div className="col-md-8">
-
                   {/* Product name */}
                   <div className="text-center mb-4">
                     <h1 className="mb-2 fs-4">{product.productName}</h1>
@@ -190,9 +203,39 @@ const IndividualProduct = () => {
 
                   {/* Product price */}
                   <p>Price: ${product.price}</p>
-                  <button className="btn custom-button mt-2">
-                    Add to Cart
-                  </button>
+                  {/* Add to cart buttons */}
+                  {getProductQuantity(product.productId) === 0 ? (
+                    <button
+                      className="btn custom-button mt-1"
+                      onClick={() => {
+                        if (user) {
+                          addToCart(product.productId, 1);
+                        } else {
+                          alert("Please log in to add items to the cart.");
+                        }
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        className="btn custom-button mt-1"
+                        onClick={() => decreaseQuantity(product.productId)}
+                      >
+                        -
+                      </button>
+                      <span className="mx-2 mt-1">
+                        {getProductQuantity(product.productId)}
+                      </span>
+                      <button
+                        className="btn custom-button mt-1"
+                        onClick={() => increaseQuantity(product.productId)}
+                      >
+                        +
+                      </button>
+                    </>
+                  )}
                   {!isReviewFormVisible && !hasUserReviewed && (
                     <div>
                       <a
