@@ -5,10 +5,12 @@ import Carousel from 'react-bootstrap/Carousel';
 function FarmCarousel() {
   const [index, setIndex] = useState(0);
 
+  // Function to handle the carousel index
   const handleSelect = (selectedIndex) => {
     setIndex(selectedIndex);
   };
 
+  // Carousel data
   const carouselData = [
     {
         id: 1,
@@ -33,9 +35,11 @@ function FarmCarousel() {
     },
   ];
 
+  // Carousel component
   return (
     <section id="home" className="hero-block slideshow-wrapper"> 
       <Carousel activeIndex={index} onSelect={handleSelect}>
+        {/* Loop through the data and display each item in the carousel */}
         {carouselData.map(carousel => (
           <Carousel.Item key={carousel.id}>
             <img

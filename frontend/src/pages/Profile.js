@@ -4,164 +4,192 @@ import signupFormValidation from '../components/signupFormValidation';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 
+
 function Profile() {
+  // initialising all the hooks
   const navigate = useNavigate();
-  const { user } = useContext(UserContext); // Define 'user' here before using it
+  const { user, logoutUser, updateUser, deleteUser } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
   const [formValues, setFormValues] = useState(user ? { ...user, confirmPassword: user.password } : {});
   const [editSuccess, setEditSuccess] = useState(false);
   const [accountDeleted, setAccountDeleted] = useState(false);
 
+  // useEffect to update formValues when user changes
   useEffect(() => {
     if (user) {
       setFormValues({ ...user, confirmPassword: user.password });
     }
   }, [user]);
 
+  // Handle for when form values change
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const validateForm = () => {
-  //   const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-  //   const validationErrors = signupFormValidation(formValues, storedUsers);
+  // Handle for when user logs out
+  const handleLogout = () => {
+    logoutUser();
+    navigate('/login');
+  };
 
-  //   if (formValues.confirmPassword !== formValues.password) {
-  //     validationErrors.confirmPassword = 'Passwords do not match';
-  //   }
+  // Handle for when user edits profile info
+  const handleSaveChanges = async () => {
+    if (validateForm(formValues)) {
+      try {
+        await updateUser(user.userId, formValues);
+        // setEditSuccess(true);
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      }
+    }
+  }
 
-  //   return validationErrors;
-  // };
+  // Handle for when user deletes account
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser(user.userId);
+      setAccountDeleted(true);
+      setTimeout(() => {
+        logoutUser();
+        navigate('/');
+      }, 3000);
+    } catch (error) {
+      console.error("Error deleting account:", error);
+    }
+  };
 
-  // const saveChanges = () => {
-  //   const validationErrors = validateForm();
-  //   if (Object.keys(validationErrors).length > 0) {
-  //     setErrors(validationErrors);
-  //     return;
-  //   }
+  // Form Validation
+  const validateForm = (formValues) => { 
+    let errors = {};
+    let isValid = true;
 
-  //   const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-  //   const updatedUsers = storedUsers.map((u) => (u.id === currentUser.id ? formValues : u));
+    // Check email in correct format
+    if (!formValues.email) {
+      errors.email = 'Email is required';
+      isValid = false;
+    }
 
-  //   setEditSuccess(true);
-  //   setErrors({});
-  //   setEditMode(false);
-  //   setCurrentUser(formValues);
-  // };
+    // Check email has @ and .
+    if (!/\S+@\S+\.\S+/.test(formValues.email)) {
+      errors.email = 'Email address is invalid';
+      isValid = false;
+    }
 
-  // const handleDeleteAccount = () => {
-  //   deleteAccount(currentUser, logoutUser);
-  //   setAccountDeleted(true);
+    // Check password is at least 8 characters
+    if (formValues.password && formValues.password.length < 8) {
+      errors.password = 'Password must be 8 or more characters';
+      isValid = false;
+    }
 
-  //   setTimeout(() => {
-  //     navigate('/'); 
-  //   }, 3500); 
-  // };
+    // Check password has special characters
+    if (formValues.password && !/(?=.*[!@#$%^&*])/.test(formValues.password)) {
+      errors.password = 'Password must contain a special character';
+      isValid = false;
+    }
 
-  // useEffect(() => {
-  //   const isLoggedIn = localStorage.getItem('isLoggedIn');
-  //   if (!isLoggedIn) {
-  //     navigate('/login');
-  //   }
+    // Check password has uppercase letter
+    if (formValues.password && !/(?=.*[A-Z])/.test(formValues.password)) {
+      errors.password = 'Password must contain an uppercase letter';
+      isValid = false;
+    }
 
-  //   if (editSuccess) {
-  //     const timeoutId = setTimeout(() => {
-  //       setEditSuccess(false);
-  //     }, 3000); 
+    // Check password has number
+    if (formValues.password && !/(?=.*[0-9])/.test(formValues.password)) {
+      errors.password = 'Password must contain a number';
+      isValid = false;
+    }
 
-  //     return () => clearTimeout(timeoutId); 
-  //   }
-  // }, [navigate, editSuccess]); 
+    // 
+    setErrors(errors);
+
+    // If no issues, return true
+    return isValid;
+  }
+
+
 
   return (
+    // Profile Page
     <div className="container-fluid">
       {editSuccess && (
         <div className="alert alert-success text-center mt-4 col-md-6 mx-auto" role="alert">
           Your profile details have been updated successfully!
         </div>
       )}
+      {/* account deletion confirmation message */}
       {accountDeleted && (
         <div className="alert alert-danger text-center mt-4 col-md-6 mx-auto" role="alert">
           Account deleted. You will be redirected to the home page.
         </div>
       )}
+
+      {/* Welcome Message to user */}
+      <div className="text-center mt-4">
+        {user && <h1 style={{ fontWeight: 'bold', fontSize: '40px' }}>Welcome, {user.username}!</h1>}
+      </div>
+
+      {/* Profile Form */}
       <div className="row justify-content-center mt-4">
         <div className="col-md-6 mx-auto">
           <div className="card">
             <div className="card-body">
               <h1 className="mb-2 fs-4 text-center">Your Profile</h1>
+              {/* If user is logged in, display profile form */}
               {user ? (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}
-                >
+                <form onSubmit={(e) => e.preventDefault()}>
+                  {/* Username Section */}
                   <div className="mb-3">
                     <label className="form-label">Username:</label>
-                    <input
-                      type="text"
-                      className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                      name="name"
-                      value={formValues.name}
-                      onChange={handleChange}
-                      disabled={!editMode}
-                    />
-                    {errors.name && <div className="invalid-feedback">{errors.username}</div>}
+                    <input type="text" className={`form-control ${errors.username ? 'is-invalid' : ''}`} 
+                    name="username" value={formValues.username} onChange={handleChange} disabled={!editMode} />
+                    {errors.username && <div className="invalid-feedback">{errors.username}</div>}
                   </div>
+
+                  {/* Email Section */}
                   <div className="mb-3">
                     <label className="form-label">Email:</label>
-                    <input
-                      type="email"
-                      className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                      name="email"
-                      value={formValues.email}
-                      onChange={handleChange}
-                    />
-                    {errors.email && <div class="invalid-feedback">{errors.email}</div>}
+                    <input type="email" className={`form-control ${errors.email ? 'is-invalid' : ''}`} 
+                    name="email" value={formValues.email} onChange={handleChange} disabled={!editMode} />
+                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                   </div>
+
+                  {/* Password Section */}
                   <div className="mb-3">
-                    <label class="form-label">Password:</label>
-                    <input
-                      type="password"
-                      className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                      name="password"
-                      value={formValues.password}
-                      onChange={handleChange}
-                      disabled={!editMode}
-                    />
-                    {errors.password && <div class="invalid-feedback">{errors.password}</div>}
+                    <label className="form-label">Password:</label>
+                    <input type="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} 
+                    name="password" value={formValues.password} onChange={handleChange} disabled={!editMode} />
+                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                   </div>
+
+                  {/* If in edit mode, display save changes or cancel buttons */}
                   {editMode ? (
                     <div className="text-center">
-                      <button type="button" class="btn btn-success mx-1">
+                      <button type="button" className="btn btn-success mx-1" onClick={handleSaveChanges}>
                         Save Changes
                       </button>
-                      <button type="button" className="btn btn-secondary mx-1" onClick={() => {
-                        setEditMode(false);
-                        setFormValues({ ...user, confirmPassword: user.password }); 
-                      }}>
-                        Cancel
-                      </button>
+                      <button type="button" className="btn btn-secondary mx-1" onClick={() => { setEditMode(false); setFormValues({ ...user, confirmPassword: user.password }); }}>Cancel</button>
                     </div>
                   ) : (
+                    // If not in edit mode, display edit profile, logout, and delete account buttons
                     <div className="text-center">
-                      <button type="button" class="btn btn-primary mx-1" onClick={() => setEditMode(true)}>
+                      {/* Edit Profile Button */}
+                      <button type="button" className="btn btn-primary mx-1" onClick={() => setEditMode(true)}>
                         Edit Profile
                       </button>
-                      <button type="button" className="btn btn-danger mx-1">
+                      {/* Logout Button */}
+                      <button type="button" className="btn btn-danger mx-1" onClick={handleLogout}>
                         Logout
                       </button>
-                      <button
-                      type="button"
-                      className="btn btn-danger mx-1"
-                      >
-                      Delete Account
-                    </button>
+                      {/* Delete Account Button */}
+                      <button type="button" className="btn btn-danger mx-1" onClick={handleDeleteAccount}>
+                        Delete Account
+                      </button>
                     </div>
                   )}
                 </form>
+                // If user is not logged in, display message to log in
               ) : (
                 <p className="text-center">
                   Please <Link to="/login">log in</Link> to view your profile.
@@ -173,6 +201,9 @@ function Profile() {
       </div>
     </div>
   );
+
 }
+
+
 
 export default Profile;

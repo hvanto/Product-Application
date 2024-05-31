@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import validate from '../components/signupFormValidation'; // Import validate function
-import axios from 'axios';
+import validate from '../components/signupFormValidation';
 import { UserContext } from '../context/UserContext';
-import { verifyUser } from '../data/repository';
 
 const Login = () => {
+    // initialising all the hooks
     const navigate = useNavigate();
     const [fields, setFields] = useState({ email: "", password: "" });
     const [errorMessage, setErrorMessage] = useState(null);
@@ -13,61 +12,29 @@ const Login = () => {
     const { loginUser } = useContext(UserContext);
     const [loginSuccess, setLoginSuccess] = useState(false);
 
-
+    // Handle for when form values change
     const handleInputChange = (event) => {
         setFields({ ...fields, [event.target.name]: event.target.value });
     };
 
+    // Handle for when form is submitted
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        console.log('fields.email: ' + fields.email);
-        console.log('fields password: ' + fields.password);
-    
-        const user = await verifyUser(fields.email, fields.password);
-        console.log('handle submit', user);
-
-        console.log('user null ', user === null);
-
-        if(user === null) {
-          // Login failed, reset password field to blank and set error message.
-          setFields({ ...fields, password: "" });
-          setErrorMessage("Email or password invalid, please try again.");
-          return;
+        try {
+            // login user function to pass values to routes and controllers
+            await loginUser(fields.email, fields.password);
+            setLoginSuccess(true);
+            // Redirects user back to profile page
+            setTimeout(() => {
+                navigate('/profile');
+            }, 2500);
+        // Returns error if unsuccessful
+        } catch (error) {
+            setFields({ ...fields, password: "" });
+            setErrorMessage("Email or password invalid, please try again.");
         }
-        console.log('before loginUsre called: ');
-        // Set user state.
-        await loginUser(fields.email, fields.password);
-        console.log('loginUser called');
-        setLoginSuccess(true);
-    
-        //Navigate to the profile page.
-        setTimeout(() => {
-            navigate('/profile');
-        }, 2500);
     };
-
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-
-    //     const validationErrors = validate(fields); // Use validate function to get errors
-    //     setErrors(validationErrors);
-
-    //     if (Object.keys(validationErrors).length === 0) {
-    //         try {
-    //             const response = await axios.post('http://localhost:4000/api/user', fields);
-    //             loginUser(response.data.email);
-    //             setLoginSuccess(true);
-    //             setTimeout(() => {
-    //                 navigate('/profile');
-    //             }, 3000);
-    //         } catch (error) {
-    //             setFields({ ...fields, password: "" });
-    //             setErrorMessage("Email and/or password invalid, please try again.");
-    //             console.error('Error logging in:', error);
-    //         }
-    //     }
-    // };
 
     return (
         <div className="container-fluid">
@@ -78,34 +45,38 @@ const Login = () => {
                             <div className="text-center mb-4">
                                 <h1 className="mb-2 fs-4">Login</h1>
                             </div>
-                            {/* // If login is successful, display success message, otherwise display login form */}
-                            {loginSuccess ? (<p className="text-success mb-3 text-center">Log in success! You are now logged in & will be redirected to your profile.</p>) : (
+                            {/* If login is successful, display success message */}
+                            {loginSuccess ? (
+                                <p className="text-success mb-3 text-center">
+                                    Log in success! You are now logged in & will be redirected to your profile.
+                                </p>
+                            ) : (
+                                // Login form
                                 <form onSubmit={handleSubmit} noValidate>
 
-                                    {/* Email section for form */}
+                                    {/* Email Section */}
                                     <div className="mb-3">
                                         <label htmlFor="email" className="control-label mb-2">Enter Email:</label>
-                                        <input name="email" id="email" className={`form-control ${errors.email && 'is-invalid'}`}
-                                            value={fields.email} onChange={handleInputChange} />
-                                        {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
+                                        <input name="email" id="email" className={`form-control ${errors.email && 'is-invalid'}`} value={fields.email} onChange={handleInputChange}/>
+                                        {/* error message for invalid email */}
+                                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                                     </div>
 
-                                    {/* Password section for form */}
+                                    {/* Password Section */}
                                     <div className="mb-3">
                                         <label htmlFor="password" className="control-label mb-2">Enter Password:</label>
-                                        <input type="password" name="password" id="password" className={`form-control ${errors.password && 'is-invalid'}`} value={fields.password} onChange={handleInputChange} />
-                                        {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
+                                        <input type="password" name="password" id="password" className={`form-control ${errors.password && 'is-invalid'}`} value={fields.password} onChange={handleInputChange}/>
+                                        {/* error message for invalid password */}
+                                        {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                                     </div>
+                                    {/* error message for invalid email or password */}
+                                    {errorMessage && <p className="text-danger mb-3 text-center">{errorMessage}</p>}
 
-                                    {/* Error message section */}
-                                    {errorMessage && (<p className="text-danger mb-3 text-center">{errorMessage}</p>)} {}
-
-                                    {/* Submit button */}
+                                    {/* Log in button */}
                                     <div className="text-center">
                                         <button type="submit" className="btn custom-button">Log In</button>
                                     </div>
-
-                                    {/* Sign up link */}
+                                    {/* Link to signup page */}
                                     <div className="mt-3 text-center">
                                         Don't have an account? <Link to="/signup">Sign up!</Link>
                                     </div>

@@ -3,16 +3,18 @@ import { CartContext } from "../context/CartContext";
 import { Offcanvas } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+// CartDrawer component
 const CartDrawer = ({ onHide }) => {
   const { cart, fetchCart, removeFromCart } = useContext(CartContext);
   const [totalCost, setTotalCost] = useState(0);
 
+  // Fetch the cart data
   useEffect(() => {
     fetchCart();
   }, []);
 
+  // Calculate the total cost
   useEffect(() => {
-    //Calculate the total cost
     const total = cart.cartLines.reduce((total, item) => {
       const price = item.product.special
         ? item.product.specialPrice
@@ -22,10 +24,12 @@ const CartDrawer = ({ onHide }) => {
     setTotalCost(total);
   }, [cart]);
 
+  // Function to handle checkout
   const handleCheckout = () => {
     onHide();
   };
 
+  // Drawer
   return (
     <Offcanvas show={true} onHide={onHide} placement="end">
       <Offcanvas.Header closeButton>
@@ -36,19 +40,24 @@ const CartDrawer = ({ onHide }) => {
           <p>Your cart is empty.</p>
         ) : (
           <div>
-            {cart.cartLines.map(
-              (item) =>
-                item.quantity > 0 && (
-                  <div
-                    key={item.cartLineId}
-                    className="list-group-item d-flex align-items-center mb-2"
-                  >
-                    <div className="item-image me-2">
-                      <img
-                        src={item.product.imgUrl}
-                        alt={item.product.productName}
-                        style={{ height: "100px" }}
-                      />
+            {/* Map through the cart items and display them */}
+            {cart.cartLines.map(item => (
+              item.quantity > 0 && (
+                <div key={item.cartLineId} className="list-group-item d-flex align-items-center mb-2">
+                  {/* Display the item image */}
+                  <div className="item-image me-2">
+                    <img src={item.product.imgUrl} alt={item.product.productName} style={{ height: '100px' }} />
+                  </div>
+                  {/* Display the item name*/}
+                  <div className="item-details flex-grow-1 me-2">
+                    <div className="item-name">{item.product.productName}</div>
+                    <div className="item-price text-muted small">
+                      {/* Display the item price */}
+                      {item.product.special ? (
+                        <p className="card-text"><s>${item.product.price}</s> ${item.product.specialPrice}</p>
+                      ) : (
+                        <p className="card-text">${item.product.price}</p>
+                      )}
                     </div>
                     <div className="item-details flex-grow-1 me-2">
                       <div className="item-name">
@@ -89,11 +98,24 @@ const CartDrawer = ({ onHide }) => {
                       />
                     </button>
                   </div>
-                )
-            )}
-            <div className="d-flex justify-content-center">
+                  {/* Display the item quantity*/}
+                  <div className="item-quantity text-muted small me-2">Qty: {item.quantity}</div>
+
+                  {/* Display the item total price*/}
+                  <div className="item-total">${(item.product.special ? item.product.specialPrice : item.product.price) * item.quantity}</div>
+
+                  {/* Remove item from cart button */}
+                  <button className="btn btn-sm" onClick={() => removeFromCart(item.cartLineId)}>
+                    <img src="/binLogo.png" alt="Delete" style={{ width: '20px', height: '20px' }} />
+                  </button>
+                </div>
+              )
+            ))}
+            {/* Display the total cost */}
+            <div className="d-flex justify-content-center">               
               <div>Total: ${totalCost.toFixed(2)}</div>
             </div>
+            {/* Checkout button */}
             <div className="d-flex justify-content-center">
               <Link to="/checkout">
                 <button

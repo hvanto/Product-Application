@@ -15,7 +15,7 @@ exports.one = async (req, res) => {
   res.json(user);
 };
 
-// Select one user from the database if email and password are a match.
+// Checks if the user exists and the password is correct.
 exports.login = async (req, res) => {
   const user = await db.user.findOne({
     where: {
@@ -41,6 +41,29 @@ exports.login = async (req, res) => {
 
 };
 
+exports.update = async (req, res) => {
+  try {
+
+    console.log('update user controller', req.body);
+    // Find the user to update.
+    const user = await db.user.findByPk(req.params.id);
+
+    // Update the user.
+    user.username = req.body.username;
+    user.email = req.body.email;
+    user.password_hash = req.body.password_hash;
+
+    // Save the updated user.
+    await user.save();
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).send('Error updating user');
+  }
+};
+
+
 // Create a user in the database.
 exports.create = async (req, res) => {
   const hash = await argon2.hash(req.body.password, { type: argon2.argon2id });
@@ -50,6 +73,15 @@ exports.create = async (req, res) => {
     email: req.body.email,
     password_hash: hash
   });
+
+  res.json(user);
+};
+
+// Delete a user from the database.
+exports.delete = async (req, res) => {
+  const user = await db.user.findByPk(req.params.id);
+
+  await user.destroy();
 
   res.json(user);
 };

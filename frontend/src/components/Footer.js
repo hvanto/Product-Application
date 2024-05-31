@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+// Footer component
 function Footer() {
     return (
         <footer className="footer mt-3 py-3" style={{ backgroundColor: "#D2E3C8" }}>

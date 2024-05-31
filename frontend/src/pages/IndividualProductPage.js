@@ -5,6 +5,7 @@ import StarRatingComponent from "react-star-rating-component";
 import { UserContext } from "../context/UserContext";
 
 const IndividualProduct = () => {
+  // All of the state variables
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [reviewContent, setReviewContent] = useState("");
@@ -25,6 +26,7 @@ const IndividualProduct = () => {
     setRemainingChars(100);
   };
 
+  // Function to handle review content change
   const handleReviewContentChange = (e) => {
     setReviewContent(e.target.value);
     setRemainingChars(100 - e.target.value.length);
@@ -45,14 +47,15 @@ const IndividualProduct = () => {
           `http://localhost:4000/api/product/select/${productId}`
         );
         setProduct(response.data);
+      // Catch for error in fetching product
       } catch (error) {
         console.error("Error fetching product:", error);
       }
     };
-
     fetchProduct();
   }, [productId]);
 
+  // Fetch the reviews for the product
   useEffect(() => {
     const fetchReviews = async () => {
       const response = await axios.get(
@@ -141,10 +144,12 @@ const IndividualProduct = () => {
     navigate("/login");
   };
 
+  // Loading message for product
   if (!product) {
     return <div>Loading...</div>;
   }
 
+  // Function to handle star rating
   const onStarClick = (nextValue) => {
     setRating(nextValue);
   };
@@ -160,6 +165,8 @@ const IndividualProduct = () => {
           <div className="card custom-form">
             <div className="card-body">
               <div className="row">
+
+                {/* Product image */}
                 <div className="col-md-4">
                   <div className="card-img-container">
                     <img
@@ -169,11 +176,19 @@ const IndividualProduct = () => {
                     />
                   </div>
                 </div>
+
+                {/* Product details */}
                 <div className="col-md-8">
-                  <div className="text-center mb-2">
+
+                  {/* Product name */}
+                  <div className="text-center mb-4">
                     <h1 className="mb-2 fs-4">{product.productName}</h1>
                   </div>
+
+                  {/* Product description */}
                   <p>{product.productDescription}</p>
+
+                  {/* Product price */}
                   <p>Price: ${product.price}</p>
                   <button className="btn custom-button mt-2">
                     Add to Cart

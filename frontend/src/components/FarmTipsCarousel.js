@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 function FarmTipsCarousel() {
 
+    // Settings for the carousel
     const settings = {
         infinite: true,
         speed: 500,
@@ -12,6 +13,7 @@ function FarmTipsCarousel() {
         variableHeight: true 
     };
 
+    // Data for the carousel
     const farmTipsData = [
         {
             image: './farmslider1.jpg',
@@ -45,10 +47,12 @@ function FarmTipsCarousel() {
         },
     ];
 
+    // Carousel component
     return (
         <div className="container mt-4">
             <div className="row">
                 <Slider {...settings}>
+                    {/* Loop through the data and display each item in the carousel */}
                     {farmTipsData.map((d, index) => (
                         <div className='col-lg-4 col-md-6 mb-4' key={index}>
                             <div className='card'>

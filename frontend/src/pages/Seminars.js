@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Seminar component
 const Seminars = () => {
     return (
         <div>

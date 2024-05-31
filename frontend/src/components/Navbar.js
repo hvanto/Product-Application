@@ -1,17 +1,19 @@
 import React, { useState, useContext } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation
-import { Offcanvas } from 'react-bootstrap'; // Import Offcanvas
-import CartDrawer from './ShoppingCart'; // Import CartDrawer component
-import { UserContext } from '../context/UserContext'; // Import UserContext
+import { Link, useLocation } from "react-router-dom";
+import { Offcanvas } from 'react-bootstrap';
+import CartDrawer from './ShoppingCart';
+import { UserContext } from '../context/UserContext';
 
 function Navbar() {
-    const [showCart, setShowCart] = useState(false); // State to control Offcanvas visibility
-    const location = useLocation(); // Get the current location
+    const [showCart, setShowCart] = useState(false);
+    const location = useLocation();
 
+    // Check if user is logged in
     const { loggedIn } = useContext(UserContext);
 
-    const handleCloseCart = () => setShowCart(false); // Function to hide Offcanvas
-    const handleShowCart = () => setShowCart(true); // Function to show Offcanvas
+    // Function to open and close cart
+    const handleCloseCart = () => setShowCart(false); 
+    const handleShowCart = () => setShowCart(true);
 
     // Function to determine if a link is active
     const isActive = (path) => {
@@ -67,7 +69,7 @@ function Navbar() {
                         )}
                         {/* Shopping Cart Link */}
                         <Link onClick={handleShowCart}>
-                            <div className="d-flex align-items-center"> {/* Wrap shopping cart with text in a div */}
+                            <div className="d-flex align-items-center">
                                 <img src="/cart.png" alt="Shopping Cart" style={{ width: '30px', height: '30px' }} />
                             </div>
                         </Link>

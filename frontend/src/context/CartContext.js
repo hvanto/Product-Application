@@ -14,10 +14,14 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, []);
 
+  // Fetch the cart data from the backend
   const fetchCart = async () => {
     try {
-      //const userId = user.id; //UPDATE THIS TO FETCH USER ID
-      const userId = 1; 
+
+      ///////////////////////////
+      ///////////// VERIFY user.userId
+      ///////////////////////////
+      const userId = user.userId;
       const cartId = userId
       const response = await axios.get(`http://localhost:4000/api/cart/${cartId}`);
       setCart(response.data);
@@ -29,7 +33,11 @@ export const CartProvider = ({ children }) => {
   // Add product to cart
   const addToCart = async (productId, quantity) => {
     try {
-      const userId = 1; //UPDATE THIS TO FETCH USER ID
+
+      ///////////////////////////
+      ///////////// VERIFY (was previous set default to 1)
+      ///////////////////////////
+      const userId = user.userId;
       await axios.post('http://localhost:4000/api/cart/add', { userId, productId, quantity });
       // Refetch the cart after adding the product
       fetchCart();
@@ -79,6 +87,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Return the provider component
   return (
     <CartContext.Provider value={{ cart, fetchCart, addToCart, removeFromCart, increaseQuantity, decreaseQuantity }}>
       {children}
