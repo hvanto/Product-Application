@@ -38,13 +38,26 @@ function Profile() {
   const handleSaveChanges = async () => {
     if (validateForm(formValues)) {
       try {
-        await updateUser(user.userId, formValues);
-        // setEditSuccess(true);
+        const updatedValues = { ...formValues };
+
+        // Remove confirmPassword before sending the update
+        delete updatedValues.confirmPassword;
+
+        // Only include password if it has been changed
+        if (!updatedValues.password) {
+          delete updatedValues.password;
+        }
+
+        console.log('Form values before update:', updatedValues);
+        await updateUser(user.userId, updatedValues);
+        console.log('User updated successfully');
+        setEditSuccess(true);
       } catch (error) {
         console.error('Error updating profile:', error);
       }
     }
-  }
+  };
+
 
   // Handle for when user deletes account
   const handleDeleteAccount = async () => {
