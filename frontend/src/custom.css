@@ -12,6 +12,10 @@ button.custom-button:hover {
     background-color: #4F6F52;
 }
 
+.list-group-item {
+    background-color: #739072;
+}
+
 .custom-form {
     background-color: #D2E3C8;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

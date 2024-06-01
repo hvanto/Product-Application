@@ -19,11 +19,11 @@ exports.one = async (req, res) => {
 exports.login = async (req, res) => {
   const user = await db.user.findOne({
     where: {
-      email: req.body.email
-    }
+      email: req.body.email,
+    },
   });
 
-  console.log('login user controller' + user);
+  console.log("login user controller" + user);
 
   if (user === null) {
     res.status(404).send("User not found.");
@@ -38,13 +38,11 @@ exports.login = async (req, res) => {
   }
 
   res.json(user);
-
 };
 
 exports.update = async (req, res) => {
   try {
-
-    console.log('update user controller', req.body);
+    console.log("update user controller", req.body);
     // Find the user to update.
     const user = await db.user.findByPk(req.params.id);
 
@@ -58,20 +56,19 @@ exports.update = async (req, res) => {
 
     res.json(user);
   } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).send('Error updating user');
+    console.error("Error updating user:", error);
+    res.status(500).send("Error updating user");
   }
 };
-
 
 // Create a user in the database.
 exports.create = async (req, res) => {
   const hash = await argon2.hash(req.body.password, { type: argon2.argon2id });
-  
+
   const user = await db.user.create({
     username: req.body.username,
     email: req.body.email,
-    password_hash: hash
+    password_hash: hash,
   });
 
   res.json(user);
