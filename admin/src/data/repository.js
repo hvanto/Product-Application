@@ -1,41 +1,39 @@
-import { request, gql } from "graphql-request";
+import { gql } from "@apollo/client";
+import client from "../apollo/client";
 
-// --- Constants ----------------------------------------------------------------------------------
-const GRAPH_QL_URL = "http://localhost:4000/graphql";
 
-// --- Comments -----------------------------------------------------------------------------------
-async function getComments() {
-  const query = gql`
-    {
-      comments {
-        id,
-        content
-      }
+const GET_USERS = gql`
+  query GetUsers {
+    users {
+      userId
+      username
     }
-  `;
+  }
+`
 
-  const data = await request(GRAPH_QL_URL, query);
-
-  return data.comments;
-}
-
-async function createComment(content) {
-  const query = gql`
-    mutation ($content: String!) {
-      create_comment(content: $content) {
-        id,
-        content
-      }
+const BLOCK_UNBLOCK_USER = gql`
+  mutation BlockUnblockUser($userId: ID!, $block: Boolean!) {
+    blockUnblockUser(userId: $userId, block: $block) {
+      id
+      username
+      blocked
     }
-  `;
+  }
+`;
 
-  const variables = { content };
-
-  const data = await request(GRAPH_QL_URL, query, variables);
-
-  return data.create_comment;
+export const getUsers = async () => {
+  console.log("Get users");
+  const { data } = await client.query({ query: GET_USERS });
+  console.log("Users:", data);
+  return data.users;
 }
 
-export {
-  getComments, createComment
-}
+export const blockUnblockUser = async (userId, block) => {
+  console.log(`Block/Unblock user with ID: ${userId}, Block: ${block}`);
+  const { data } = await client.mutate({
+    mutation: BLOCK_UNBLOCK_USER,
+    variables: { userId, block }
+  });
+  console.log("Block/Unblock response:", data);
+  return data.blockUnblockUser;
+};
