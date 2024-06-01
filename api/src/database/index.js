@@ -16,7 +16,7 @@ db.user = require("./models/user.js")(db.sequelize, DataTypes);
 db.product = require("./models/product.js")(db.sequelize, DataTypes);
 db.cart = require("./models/cart.js")(db.sequelize, DataTypes);
 db.cartLine = require("./models/cartLine.js")(db.sequelize, DataTypes);
-// db.userFollows = require("./models/userFollows.js")(db.sequelize, DataTypes);
+db.userFollows = require("./models/userFollows.js")(db.sequelize, DataTypes);
 db.review = require("./models/review.js")(db.sequelize, DataTypes);
 
 // Relate tables.
@@ -34,6 +34,20 @@ db.review.belongsTo(db.user, { foreignKey: 'userId' });
 
 db.product.hasMany(db.review, { foreignKey: 'productId' });
 db.review.belongsTo(db.product, { foreignKey: 'productId' });
+
+// A user can follow many users.
+db.user.belongsToMany(db.user, { 
+  through: db.userFollows, 
+  foreignKey: 'userId', 
+  as: 'following' 
+});
+
+// A user can be followed by many users.
+db.user.belongsToMany(db.user, { 
+  through: db.userFollows, 
+  foreignKey: 'followUserId', 
+  as: 'followers' 
+});
 
 // Learn more about associations here: https://sequelize.org/master/manual/assocs.html
 
@@ -176,6 +190,24 @@ async function seedData() {
     content: "Great apples!",
     rating: 5,
   });
+
+    //Add reviews
+    await db.review.create({
+      reviewId: 2,
+      userId: 2,
+      productId: 2,
+      content: "nice!",
+      rating: 5,
+    });
+
+        //Add reviews
+        await db.review.create({
+          reviewId: 3,
+          userId: 2,
+          productId: 1,
+          content: "Great!",
+          rating: 5,
+        });
 
   }
 

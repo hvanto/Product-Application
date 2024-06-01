@@ -115,7 +115,7 @@ const Products = () => {
         ))}
       </div>
       {/* Display a message if there are no products */}
-      {products.length === 0 && <p>No products available.</p>}
+      {products.length === 0 && <p>Loading products..</p>}
     </div>
   );
 };

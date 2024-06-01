@@ -48,6 +48,27 @@ exports.create = async (req, res) => {
   res.json(review);
 };
 
+//Update a review in the database
+exports.update = async (req, res) => {
+  try {
+    const review = await db.review.findByPk(req.params.reviewId);
+
+    if (review) {
+      review.rating = req.body.rating;
+      review.content = req.body.content;
+
+      await review.save();
+
+      res.json(review);
+    } else {
+      res.status(404).json({ message: "Review not found." });
+    }
+  } catch (error) {
+    console.log(error); // Log the error
+    res.status(500).json({ message: "Error updating review.", error: error.message });
+  }
+};
+
 // Select all reviews for a specific product from the database.
 exports.allForProduct = async (req, res) => {
   const reviews = await db.review.findAll({

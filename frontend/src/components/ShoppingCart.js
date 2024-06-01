@@ -16,7 +16,7 @@ const CartDrawer = ({ onHide }) => {
   }, [user]);
 
   useEffect(() => {
-    if (!cart) {
+    if (!cart || !cart.cartLines) {
       return;
     }
     //Calculate the total cost
@@ -41,12 +41,11 @@ const CartDrawer = ({ onHide }) => {
       <Offcanvas.Body style={{ paddingTop: "0" }}>
         {!user ? (
           <p>Please log in to view and create your cart.</p>
-        ) : !cart ||
-          cart.cartLines.filter((item) => item.quantity > 0).length === 0 ? (
+        ) : !cart || !cart.cartLines || cart.cartLines.filter((item) => item.quantity > 0).length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
           <div>
-            {cart.cartLines.map(
+            {(cart?.cartLines || []).map(
               (item) =>
                 item.quantity > 0 && (
                   <div

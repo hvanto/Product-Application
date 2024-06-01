@@ -13,6 +13,9 @@ module.exports = (express, app) => {
 
   // Delete a specific review.
   router.delete("/:reviewId", controller.delete);
+  
+  // Update a specific review.
+  router.put("/:reviewId", controller.update);
 
   // Add routes to server.
   app.use("/api/review", router);
