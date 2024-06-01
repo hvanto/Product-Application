@@ -74,8 +74,8 @@ const ReviewList = ({
   if (!areReviewsVisible) return null;
 
   return (
-    <div className="mt-4">
-      <h3>Reviews</h3>
+    <div className="mt-2">
+      <h4>Reviews</h4>
       {reviews.length === 0 ? (
         <p>No reviews yet.</p>
       ) : (

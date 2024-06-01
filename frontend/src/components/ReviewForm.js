@@ -22,10 +22,19 @@ const ReviewForm = ({
   return (
     isReviewFormVisible && (
       <form onSubmit={(e) => handleReviewSubmit(e, reviewId)}>
-        <div className="mb-3">
-          <label htmlFor="reviewContent" className="form-label">
+        <div className="mb-1">
+          {/* <label htmlFor="reviewContent" className="form-label">
             Review:
-          </label>
+          </label> */}
+          <div>
+          <StarRatingComponent
+            name="rating"
+            starCount={5}
+            value={rating}
+            onStarClick={onStarClick}
+            renderStarIcon={() => <span style={{ fontSize: '20px' }}>★</span>}
+          />
+        </div>
           <textarea
             id="reviewContent"
             className="form-control"
@@ -36,14 +45,6 @@ const ReviewForm = ({
           <div>
             <small>{remainingChars} characters remaining</small>
           </div>
-        </div>
-        <div className="mb-3">
-          <StarRatingComponent
-            name="rating"
-            starCount={5}
-            value={rating}
-            onStarClick={onStarClick}
-          />
         </div>
         <button type="submit" className="btn custom-button">
           {isEditMode ? "Update Review" : "Submit Review"}
