@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) =>
     password_hash: {
       type: DataTypes.STRING(255),
       allowNull: false
+    },
+    blocked: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
     timestamps: true,

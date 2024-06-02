@@ -22,14 +22,17 @@ const BLOCK_UNBLOCK_USER = gql`
   }
 `;
 
-// Function to get users
+// Function to get all users
 export const getUsers = async () => {
   console.log("Fetching users...");
   try {
-    const { data } = await client.query({ query: GET_USERS });
+    
+    const { data } = await
+    client.query({ query: GET_USERS });
     console.log("Users fetched:", data.users);
     return data.users;
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error fetching users:", error);
     throw error;
   }

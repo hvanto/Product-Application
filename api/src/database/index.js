@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const config = require("./config.js");
 
+
+
 const db = {
   Op: Sequelize.Op
 };
@@ -143,32 +145,38 @@ const users = [
   {
     username: 'isaac',
     email: 'isaac@gmail.com',
-    password: 'abcD123!'
+    password: 'abcD123!',
+    blocked: false
   },
   {
     username: 'henry',
     email: 'henry@gmail.com',
-    password: 'Abcd1234!'
+    password: 'Abcd1234!',
+    blocked: false
   },
   {
     username: 'john',
     email: 'john@gmail.com',
-    password: 'Abcd1234!'
+    password: 'Abcd1234!',
+    blocked: false
   },
   {
     username: 'jane',
     email: 'jane@gmail.com',
-    password: 'Abcd1234!'
+    password: 'Abcd1234!',
+    blocked: false
   },
   {
     username: 'jill',
     email: 'jill@gmail.com',
-    password: 'Abcd1234!'
+    password: 'Abcd1234!',
+    blocked: false
   },
   {
     username: 'Angus',
     email: 'angus@gmail.com',
-    password: 'Abcd1234!'
+    password: 'Abcd1234!',
+    blocked: false
   }
 ];
 
@@ -231,4 +239,6 @@ async function seedData() {
 
   }
 
+
+  
 module.exports = db;
