@@ -149,6 +149,16 @@ const users = [
     username: 'henry',
     email: 'henry@gmail.com',
     password: 'Abcd1234!'
+  },
+  {
+    username: 'sarah',
+    email: 'sarah@gmail.com',
+    password: 'Abcd1234!'
+  },
+  {
+    username: 'jane',
+    email: 'jane@gmail.com',
+    password: 'Abcd1234!'
   }
 ];
 
