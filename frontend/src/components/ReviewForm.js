@@ -23,9 +23,6 @@ const ReviewForm = ({
     isReviewFormVisible && (
       <form onSubmit={(e) => handleReviewSubmit(e, reviewId)}>
         <div className="mb-1">
-          {/* <label htmlFor="reviewContent" className="form-label">
-            Review:
-          </label> */}
           <div>
           <StarRatingComponent
             name="rating"

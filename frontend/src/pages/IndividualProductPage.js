@@ -21,6 +21,7 @@ const IndividualProduct = () => {
   const [hasUserReviewed, setHasUserReviewed] = useState(false);
   const [refreshReviews, setRefreshReviews] = useState(false);
   const [editingReview, setEditingReview] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleEditButtonClick = (review) => {
     setEditingReview(review);
@@ -29,7 +30,8 @@ const IndividualProduct = () => {
     setIsReviewFormVisible(true);
   };
 
-  const { cart, addToCart, decreaseQuantity, increaseQuantity } = useContext(CartContext);
+  const { cart, addToCart, decreaseQuantity, increaseQuantity } =
+    useContext(CartContext);
 
   const getProductQuantity = (productId) => {
     let quantity = 0;
@@ -106,12 +108,21 @@ const IndividualProduct = () => {
       return;
     }
 
+    // Check if reviewContent is empty
+    if (!reviewContent.trim()) {
+      setErrorMessage("Review can't be empty.");
+      return;
+    }
+
     try {
       if (editingReview) {
-        const response = await axios.put(`http://localhost:4000/api/review/${reviewId}`, {
-          content: reviewContent,
-          rating,
-        });
+        const response = await axios.put(
+          `http://localhost:4000/api/review/${reviewId}`,
+          {
+            content: reviewContent,
+            rating,
+          }
+        );
 
         if (response.status === 200) {
           setReviews((prevReviews) =>
@@ -148,7 +159,7 @@ const IndividualProduct = () => {
           console.error("Error saving review:", response);
         }
       }
-
+      setErrorMessage("");
       setRating(0);
       setReviewContent("");
       setRemainingChars(100);
@@ -272,6 +283,7 @@ const IndividualProduct = () => {
                       "Leave a review"
                     )}
                   </div>
+                  {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
                   <ReviewForm
                     isReviewFormVisible={isReviewFormVisible}
                     user={user}

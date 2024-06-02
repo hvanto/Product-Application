@@ -83,7 +83,9 @@ const ReviewList = ({
           {reviews.map((review) => (
             <li key={review.reviewId} className="list-group-item">
               <div>
-                <strong>{review.user.username}</strong>
+                <strong>
+                  {review.user ? review.user.username : "Unknown user"}
+                </strong>
                 <div>
                   {Array(review.rating)
                     .fill()
