@@ -8,7 +8,7 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
-              <Link className="nav-link" to="/">Users</Link>
+              <Link className="nav-link" to="/users">Users</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/products">Products</Link>
