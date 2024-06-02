@@ -16,7 +16,6 @@ const ReviewForm = ({
 }) => {
   useEffect(() => {
     if (!isReviewFormVisible) return;
-    // You can add any setup or cleanup code here if needed for the review form
   }, [isReviewFormVisible]);
 
   return (
