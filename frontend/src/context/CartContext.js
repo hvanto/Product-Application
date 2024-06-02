@@ -101,29 +101,21 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  exports.clearCart = async (req, res) => {
+  const clearCart = async () => {
+    if (!cart) {
+      console.error("No cart found for the user");
+      return;
+    }
+    const cartId = user.userId;
+    console.log('Cart ID to clear:', cartId);
     try {
-      console.log("Received cartId:", req.params.cartId);
-      const cartId = req.params.cartId;
-
-      // Find the cart
-      let cart = await db.cart.findOne({ where: { cartId } });
-      if (!cart) {
-        return res.status(404).json({ error: "Cart not found" });
-      }
-
-      // Delete all cart line items
-      const result = await db.cartLine.destroy({
-        where: { cartId: cart.cartId },
-      });
-      console.log("Result of deleting cart line items:", result);
-
-      res.json({ message: "Cart cleared" });
+      await axios.delete(`http://localhost:4000/api/cart/clear/${cartId}`);
+      // Refetch the cart after clearing the cart
+      fetchCart();
     } catch (error) {
       console.error("Error clearing cart:", error);
-      res.status(500).json({ error: "An unexpected error occurred." });
     }
-  };
+  }
 
   // Return the provider component
   return (
