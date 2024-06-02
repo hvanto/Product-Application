@@ -15,3 +15,7 @@ cd into API:
 cd into frontend:
 - npm install bootstrap react-star-rating-component --force
 - npm start
+
+in Admin:
+- npm install
+- npm start
