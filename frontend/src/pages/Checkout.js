@@ -92,7 +92,7 @@ const Checkout = () => {
     if (!cardNumberError && !expiryDateError && !cvvValidationError) {
       setOrderConfirmed(true);
       clearCart();
-      alert('Order Confirmed!')
+      alert("Order Confirmed!");
       setCreditCardNumber("");
       setCvv("");
       setExpiryDate("");
@@ -103,7 +103,15 @@ const Checkout = () => {
     <div className="container">
       <div className="row">
         <div className="col-md-6">
-          <h1 className="fs-4 text-center mt-2 mb-3">Order Summary</h1>
+          {!orderConfirmed && (
+            <h1 className="fs-4 text-center mt-2 mb-3">Order Summary</h1>
+          )}
+          {orderConfirmed && (
+            <h1 className="fs-4 text-center mt-2 mb-3">
+              Order confirmed. <br />
+              Thank you for shopping with us!
+            </h1>
+          )}
           <>
             <div>
               {/* Display all items in the cart */}
@@ -129,8 +137,8 @@ const Checkout = () => {
                           {item.product.productName}
                         </h2>
                         <p
-                          className="fs-7 mb-0" 
-                          style={{ fontWeight: "lighter", fontSize: "0.8rem" }} 
+                          className="fs-7 mb-0"
+                          style={{ fontWeight: "lighter", fontSize: "0.8rem" }}
                         >
                           Quantity: {item.quantity}
                           <br />
@@ -167,11 +175,13 @@ const Checkout = () => {
               )}
             </div>
             {/* Display the total cost */}
-            <div className="total-cost mt-3">
-              <p className="fs-6 mb-1" style={{ fontWeight: "bold" }}>
-                Total Cost: ${totalCost.toFixed(2)}
-              </p>
-            </div>
+            {!orderConfirmed && (
+              <div className="total-cost mt-3">
+                <p className="fs-6 mb-1" style={{ fontWeight: "bold" }}>
+                  Total Cost: ${totalCost.toFixed(2)}
+                </p>
+              </div>
+            )}
           </>
         </div>
         <div className="col-md-6">
@@ -226,9 +236,7 @@ const Checkout = () => {
                 value={cvv}
                 onChange={(e) => setCvv(e.target.value)}
               />
-              {cvvError && (
-                <div className="invalid-feedback">{cvvError}</div>
-              )}
+              {cvvError && <div className="invalid-feedback">{cvvError}</div>}
             </div>
             <button
               type="button"

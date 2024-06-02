@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
 // Create UserContext
@@ -10,6 +10,14 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
 
+    // Initialize user state from localStorage
+    useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser) {
+            setUser(storedUser);
+            setLoggedIn(true);
+        }
+    }, []);
 
     // Function to login user
     const loginUser = async (email, password) => {
@@ -19,7 +27,7 @@ export const UserProvider = ({ children }) => {
             // Set user state variable
             setUser(response.data);
             setLoggedIn(true);
-        // Catch for error in login
+            localStorage.setItem('user', JSON.stringify(response.data)); // Save to localStorage
         } catch (error) {
             console.error('Login failed:', error);
             throw error;
@@ -30,6 +38,7 @@ export const UserProvider = ({ children }) => {
     const logoutUser = () => {
         setUser(null);
         setLoggedIn(false);
+        localStorage.removeItem('user'); // Remove from localStorage
     };
 
     // Function to update user
@@ -38,44 +47,40 @@ export const UserProvider = ({ children }) => {
             // Make a PUT request to the backend
             const response = await axios.put(`http://localhost:4000/api/users/update/${id}`, user);
             setUser(response.data);
+            localStorage.setItem('user', JSON.stringify(response.data)); // Update localStorage
         } catch (error) {
-            // Catch for error in updating user
             console.error('Error updating user:', error);
             throw error;
         }
-    }
+    };
 
     // Function to delete user
     const deleteUser = async (id) => {
         try {
             // Make a DELETE request to the backend
-            const response = await axios.delete(`http://localhost:4000/api/users/delete/${id}`);
-            // Set user state variable
+            await axios.delete(`http://localhost:4000/api/users/delete/${id}`);
             setUser(null);
             setLoggedIn(false);
+            localStorage.removeItem('user'); // Remove from localStorage
         } catch (error) {
-            // Catch for error in deleting user
             console.error('Error deleting user:', error);
             throw error;
         }
-    }
+    };
 
     // Function to create user
     const createUser = async (user) => {
         try {
             // Make a POST request to the backend
-            console.log('user', user)
             const response = await axios.post("http://localhost:4000/api/users", user);
-            // Set user state variable
             setUser(response.data);
             setLoggedIn(true);
+            localStorage.setItem('user', JSON.stringify(response.data));
         } catch (error) {
-            // Catch for error in creating user
             console.error('Error creating user:', error);
             throw error;
         }
-    }
-
+    };
 
     // Return the UserContext Provider
     return (
