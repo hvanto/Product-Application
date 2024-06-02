@@ -1,14 +1,10 @@
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { createClient } from "graphql-ws";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-const GRAPHQL_ENDPOINT = "ws://localhost:4000/graphql";
+const GRAPHQL_ENDPOINT = "http://localhost:4000/graphql";
 
-const link = new GraphQLWsLink(
-  createClient({
-      url: GRAPHQL_ENDPOINT,
-  })
-);
+const link = new HttpLink({
+  uri: GRAPHQL_ENDPOINT,
+});
 
 const cache = new InMemoryCache();
 
