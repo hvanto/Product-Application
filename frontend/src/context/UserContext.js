@@ -9,6 +9,8 @@ export const UserProvider = ({ children }) => {
     // State variables
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [cartItems, setCartItems] = useState([]);
+
 
     // Initialize user state from localStorage
     useEffect(() => {
@@ -38,6 +40,7 @@ export const UserProvider = ({ children }) => {
     const logoutUser = () => {
         setUser(null);
         setLoggedIn(false);
+        setCartItems([]);
         localStorage.removeItem('user'); // Remove from localStorage
     };
 

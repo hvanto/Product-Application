@@ -76,7 +76,7 @@ const Products = () => {
                 )}
               </div>
               {/* Add to cart button */}
-              {getProductQuantity(product.productId) === 0 ? (
+              {!user || getProductQuantity(product.productId) === 0 ? (
                 <button
                   className="btn custom-button mt-1"
                   onClick={() => {

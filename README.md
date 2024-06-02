@@ -15,3 +15,9 @@ cd into API:
 cd into frontend:
 - npm install bootstrap react-star-rating-component --force
 - npm start
+    for testing:
+    - npm install jest
+    - npm test
+
+References:
+- lectorial and practical lab sheets and workings
