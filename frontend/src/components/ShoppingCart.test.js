@@ -50,6 +50,7 @@ beforeEach(() => {
 });
 
 //NOTE: We can't test increase / decrease quantity due to the fact our cart doesn't allow this funtionality, rather it has to be done from Individual Product or Products page.
+//Please ignore the failed App.js test run. 
 
 // Test rendering a cart with items.
 test("Render cart with items", () => {
