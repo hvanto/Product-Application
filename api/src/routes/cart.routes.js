@@ -7,7 +7,7 @@ module.exports = (express, app) => {
     router.put('/update', cartController.updateCartItem);
     router.delete('/remove/:cartLineId', cartController.removeFromCart);
     router.post('/create', cartController.createCart);
+    router.delete('/clear/:cartId', cartController.clearCart); 
   
     app.use("/api/cart", router);
   };
-  

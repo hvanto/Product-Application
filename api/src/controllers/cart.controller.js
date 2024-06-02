@@ -122,3 +122,25 @@ exports.removeFromCart = async (req, res) => {
     res.status(500).json({ error: 'An unexpected error occurred.' });
   }
 };
+
+exports.clearCart = async (req, res) => {
+  try {
+    console.log('Received cartId:', req.params.cartId);
+    const cartId = req.params.cartId;
+
+    // Find the cart
+    let cart = await db.cart.findOne({ where: { cartId } });
+    if (!cart) {
+      return res.status(404).json({ error: 'Cart not found' });
+    }
+
+    // Delete all cart line items
+    const result = await db.cartLine.destroy({ where: { cartId: cart.cartId } });
+    console.log('Result of deleting cart line items:', result);
+
+    res.json({ message: 'Cart cleared' });
+  } catch (error) {
+    console.error('Error clearing cart:', error);
+    res.status(500).json({ error: 'An unexpected error occurred.' });
+  }
+};

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const ReviewList = ({
@@ -15,7 +15,7 @@ const ReviewList = ({
       // Unfollow user
       try {
         const response = await axios.delete(
-          `/api/userFollows/unfollow?userId=${user.userId}&followUserId=${followUserId}`
+          `http://localhost:4000/api/userFollows/unfollow?userId=${user.userId}&followUserId=${followUserId}`
         );
         if (response.status === 200) {
           setFollowedUsers(followedUsers.filter((id) => id !== followUserId));
@@ -47,11 +47,35 @@ const ReviewList = ({
     }
   };
 
+  useEffect(() => {
+    const fetchFollows = async () => {
+      if (!user) {
+        return;
+      }
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/userFollows/following?userId=${user.userId}`
+        );
+        if (response.status === 200) {
+          setFollowedUsers(response.data.map((follow) => follow.followUserId));
+        } else {
+          console.error("Error fetching followed users:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching followed users:", error);
+      }
+    };
+
+    if (user) {
+      fetchFollows();
+    }
+  }, [user]);
+
   if (!areReviewsVisible) return null;
 
   return (
-    <div className="mt-4">
-      <h3>Reviews</h3>
+    <div className="mt-2">
+      <h4>Reviews</h4>
       {reviews.length === 0 ? (
         <p>No reviews yet.</p>
       ) : (
@@ -60,7 +84,6 @@ const ReviewList = ({
             <li key={review.reviewId} className="list-group-item">
               <div>
                 <strong>{review.user.username}</strong>
-                <p>{review.content}</p>
                 <div>
                   {Array(review.rating)
                     .fill()
@@ -73,6 +96,7 @@ const ReviewList = ({
                       <span key={index}>&#9734;</span>
                     ))}
                 </div>
+                <p style={{ marginBottom: "2px" }}>{review.content}</p>
                 {user && user.userId === review.userId && (
                   <div>
                     <button
