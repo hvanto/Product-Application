@@ -1,11 +1,6 @@
-# FSD-A2
-
-SORRY FOR PUBLIC REPO - I TRANSFERRED FROM A PERSONAL ACCOUNT AND NOW CAN'T ACCESS SETTINGS TO MAKE IT PRIVATE
-github link: https://github.com/rmit-fsd-2024-s1/s3849054-s3931572-a2
-
 Members:
-Henry van Toledo - s3849054
-Isaac Kelsall - s3931572
+Henry van Toledo
+Isaac Kelsall
 
 How to run application:
 
@@ -21,6 +16,3 @@ cd into frontend:
     for testing:
     - npm install jest
     - npm test
-
-References:
-- lectorial and practical lab sheets and workings
